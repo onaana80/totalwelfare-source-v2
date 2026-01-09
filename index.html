@@ -67,6 +67,9 @@
         }
 
         .role-btn.active { background: var(--welfare); color: white; }
+        /* NEW: Sponsor Button Style */
+        .role-btn.sponsor-btn { background: #333; border: 1px solid var(--accent); color: var(--accent); }
+        .role-btn.sponsor-btn.active { background: var(--accent); color: #000; }
 
         .mode-switch { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .mode-btn {
@@ -143,11 +146,28 @@
         /* --- Stewards & Onboarding --- */
         .steward-list { display: flex; flex-direction: column; gap: 1rem; }
         .steward-card {
-            background: var(--bg-card); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);
+            background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);
+            transition: transform 0.2s; cursor: pointer;
         }
+        .steward-card:hover { transform: translateX(5px); border-left-color: var(--welfare); }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
         .form-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 4px; color: white; }
+
+        /* --- NEW: Sponsor Wall Styles */
+        .sponsor-section { margin-bottom: 3rem; }
+        .sponsor-wall {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;
+        }
+        .sponsor-card {
+            background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .sponsor-logo {
+            width: 60px; height: 60px; object-fit: contain; margin-bottom: 0.5rem; opacity: 0.9;
+        }
+        .sponsor-name { font-size: 0.9rem; font-weight: bold; color: white; }
+        .sponsor-type { font-size: 0.75rem; color: var(--accent); text-transform: uppercase; margin-bottom: 0.2rem; }
 
         /* --- Terminal --- */
         .terminal {
@@ -159,7 +179,7 @@
         .type.SNFS { color: var(--welfare); }
         .type.CONVERT { color: var(--primary); }
         .type.GIFT { color: var(--accent); }
-        .type.JOIN { color: #fff; }
+        .type.SPONSOR { color: var(--accent); border: 1px solid var(--accent); padding: 0 5px; font-size: 0.8rem; }
 
         /* --- Modals --- */
         .modal-overlay {
@@ -184,6 +204,7 @@
             .controls { flex-direction: column; align-items: stretch; }
             .role-switcher, .mode-switch { justify-content: center; }
             .btn-grid { grid-template-columns: 1fr; }
+            .app-form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -202,13 +223,14 @@
                     <button class="role-btn" onclick="setRole('promoter')">Promoter</button>
                     <button class="role-btn" onclick="setRole('owner')">Owner</button>
                     <button class="role-btn" onclick="setRole('steward')">Steward</button>
+                    <button class="role-btn sponsor-btn" onclick="setRole('sponsor')">Sponsor</button> <!-- RESTORED -->
                 </div>
 
                 <div class="mode-switch">
                     <button class="mode-btn active" onclick="switchView('sourcing')">Ecosystem</button>
-                    <button class="mode-btn" onclick="switchView('source-direct')">SourceDirect SNFS</button>
+                    <button class="mode-btn" onclick="switchView('source-direct')">SourceDirect</button>
                     <button class="mode-btn klinik-btn" onclick="switchView('klinik')">Soul Food Klinik</button>
-                    <button class="mode-btn" onclick="switchView('dashboard')">Dashboard</button>
+                    <button class="mode-btn" onclick="switchView('dashboard')">My Dashboard</button>
                     <button class="mode-btn" onclick="switchView('stewards')">Join Us</button>
                     <button class="mode-btn" onclick="switchView('constitution')">Constitution</button>
                 </div>
@@ -234,7 +256,7 @@
             </div>
         </section>
 
-        <!-- NEW VIEW: SOURCEDIRECT (PROVIDER LIST) -->
+        <!-- VIEW: SOURCEDIRECT (PROVIDER LIST) -->
         <section id="view-source-direct" class="hidden">
             <div style="margin-bottom: 2rem; text-align: center;">
                 <h2 style="color:var(--welfare);">SourceDirect SNFS</h2>
@@ -272,7 +294,7 @@
         <section id="view-stewards" class="hidden">
             <div style="margin-bottom: 2rem; text-align: center;">
                 <h1>Become a Steward</h1>
-                <p style="color: var(--text-muted);">Join the Universal Family. Volunteer your time and expertise.</p>
+                <p style="color: var(--text-muted);">Join us to build the Universal Family. Volunteer your time and expertise.</p>
             </div>
 
             <div class="steward-list">
@@ -280,19 +302,19 @@
                     <h3 style="color:var(--primary);">1. Tech Steward</h3>
                     <p style="font-size: 0.9rem;">Developers, Designers, Security Auditors.</p>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Reward: Gratitude Units (TTVc)</p>
-                    <button class="btn btn-primary" onclick="showToast('Application routed to Tech Bounty.', 'success')">Apply Now</button>
+                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Tech Bounty.', 'success')">Apply Now</button>
                 </div>
                 
                 <div class="steward-card">
                     <h3 style="color:var(--welfare);">2. Legal Steward</h3>
                     <p style="font-size: 0.9rem;">Advocates for Natural Law and Non-Commercial Compliance.</p>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Reward: Priority Access & Gratitude Units</p>
-                    <button class="btn btn-primary" onclick="showToast('Application routed to Legal Pact.', 'success')">Apply Now</button>
+                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Legal Pact.', 'success')">Apply Now</button>
                 </div>
 
                 <div class="steward-card">
                     <h3 style="color:var(--agri);">3. Transporter / Deliverer</h3>
-                    <p style="font-size: 0.9rem;">Movers and Handlers of the Inbuilt Sharing Cost.</p>
+                    <p style="font-size: 0.9rem;">Movers and Handlers of goods. Managing Logistics Awards.</p>
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Reward: Gratitude Allocation (Logistics Award)</p>
                     <button class="btn btn-primary" onclick="openJoinModal('Transporter')">Apply Now</button>
                 </div>
@@ -308,14 +330,16 @@
                     <div class="stat-label">Total Items Stored</div>
                 </div>
                 <div class="stat-card" id="dash-promoter-card">
-                    <h3>Gratitude Balance</h3>
+                    <h3>Gratitude Awards</h3>
                     <div class="stat-val" id="dash-promoter">0.00</div>
-                    <div class="stat-label">Promoter / Transporter Awards</div>
+                    <div class="stat-label">Promoter / Transporter Balance</div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Earned via 20% SNFS share.</p>
                 </div>
                 <div class="stat-card" id="dash-owner-card">
                     <h3>Passive Welfare Support</h3>
                     <div class="stat-val" id="dash-owner">0.00</div>
                     <div class="stat-label">Owner Accumulation</div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Generated by SNFS Access to your goods.</p>
                 </div>
             </div>
         </section>
@@ -331,12 +355,12 @@
             </div>
 
             <div class="klinik-section">
-                <h2 class="klinik-title"><span style="font-size:1.8rem;">??</span> Conscious Dietary Elements</h2>
+                <h2 class="klinik-title"><span style="font-size:1.8rem;">🧠</span> Conscious Dietary Elements</h2>
                 <div class="tips-grid" id="klinik-tips"></div>
             </div>
 
             <div class="klinik-section">
-                <h2 class="klinik-title"><span style="font-size:1.8rem;">??</span> Healing Recipes</h2>
+                <h2 class="klinik-title"><span style="font-size:1.8rem;">🍲</span> Healing Recipes</h2>
                 <div class="product-grid" id="klinik-recipes"></div>
             </div>
         </section>
@@ -350,7 +374,7 @@
                     
                     <h3 style="margin-top:1rem; color:var(--agri);">The Protocol</h3>
                     <ul style="margin-left: 1.5rem;">
-                        <li><strong>Golden Anchor:</strong> 1 TTVc ? = 0.1g Gold (Universal Standard).</li>
+                        <li><strong>Golden Anchor:</strong> 1 TTVc ⭐ = 0.1g Gold (Universal Standard).</li>
                         <li><strong>Inbuilt Sharing Cost:</strong> Universal Price includes equitable Logistics, Packing, and Handling costs.</li>
                         <li><strong>TTVc Fixed Value:</strong> Once issued, TTVc is immutable against future price changes.</li>
                         <li><strong>Gratitude Allocation:</strong> 20% of SNFS Donations split between Promoter & Owner. 0% on Conversions.</li>
@@ -362,35 +386,37 @@
         </section>
     </main>
 
-    <!-- MODAL: ONBOARDING -->
+    <!-- MODAL: ONBOARDING FORM (DYNAMIC) -->
     <div class="modal-overlay" id="modal-join">
         <div class="modal-content">
-            <h2 id="join-title">Stewardship Application</h2>
+            <h2 id="join-title" style="color:var(--welfare);">Stewardship Application</h2>
             <p style="color:var(--text-muted); margin-bottom: 1.5rem;">
                 Join us to build the Universal Family. You must be a Family Member to verify identity before becoming a Steward.
             </p>
             
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="form-input" placeholder="Your Full Name">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" class="form-input" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label>Role</label>
-                <input type="text" id="join-role-display" class="form-input" readonly value="Transporter" style="opacity: 0.7;">
-            </div>
-            <div class="form-group">
-                <label>Why do you want to join?</label>
-                <textarea class="form-input" rows="3" placeholder="To serve the Universal Family..."></textarea>
-            </div>
+            <form onsubmit="processJoin(event)">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="join-name" class="form-input" placeholder="Your Full Name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="join-email" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" id="join-role-display" class="form-input" readonly value="Transporter" style="opacity: 0.7;">
+                </div>
+                <div class="form-group">
+                    <label>Why do you want to join?</label>
+                    <textarea class="form-input" rows="3" placeholder="To serve the Universal Family..."></textarea>
+                </div>
 
-            <div class="btn-grid">
-                <button class="btn btn-outline" onclick="closeModal('modal-join')">Cancel</button>
-                <button class="btn btn-primary" onclick="processJoin()">Submit Application</button>
-            </div>
+                <div class="btn-grid">
+                    <button class="btn btn-outline" onclick="closeModal('modal-join')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -428,10 +454,8 @@
     <div class="modal-overlay" id="modal-snfs">
         <div class="modal-content">
             <div class="welfare-box">
-                <h2 style="color:var(--welfare); margin-bottom:0.5rem;">Donate to Access (SNFS)</h2>
-                <p>You don't have TTVc stored for this item. To access, make a Voluntary Contribution to support the ecosystem.</p>
-                <br>
-                <strong>Impact:</strong> 20% of your contribution supports the Owner and Transporter of this good.
+                <h2 style="color:var(--welfare); margin-bottom:0.5rem;">TotalWelfare Service (SNFS)</h2>
+                <p>Access goods immediately via Voluntary Contribution. <br><br><strong>20% Gratitude Allocation:</strong> Supports Promoter (Connector) & Owner (Storage).</p>
             </div>
             
             <div style="margin-bottom: 1rem;">
@@ -442,7 +466,9 @@
                 <label style="display:block; margin-bottom: 0.5rem;">Voluntary Contribution Amount</label>
                 <input type="number" id="snfs-amount" value="50" style="width:100%; padding:0.5rem; background:var(--bg-dark); color:white; border:1px solid var(--border);">
             </div>
-            
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Note: 20% of this donation supports ecosystem (10% Promoter, 10% Owner). No taxes on storage conversion.
+            </p>
             <button class="btn btn-welfare" onclick="processSNFS()">Contribute & Access</button>
             <button class="btn btn-outline" onclick="closeModal('modal-snfs')">Cancel</button>
         </div>
@@ -517,21 +543,29 @@
 
         const klinikContent = {
             tips: [
-                    { icon: "??", title: "Grounding Energy", text: "Root vegetables (Carrots, Beets) connect Spirit to Earth energy. Consuming raw maximizes enzyme intake." },
-                    { icon: "??", title: "Solar Plexus Fire", text: "Citrus fruits activate digestive fire. Aid in processing emotions and boosting metabolic rate." },
-                    { icon: "??", title: "Heart Openers", text: "Green leafy vegetables carry frequency of heart chakra. Promote compassion." }
+                    { icon: "🥕", title: "Grounding Energy", text: "Root vegetables (Carrots, Beets) connect Spirit to Earth energy. Consuming raw maximizes enzyme intake." },
+                    { icon: "🍋", title: "Solar Plexus Fire", text: "Citrus fruits activate digestive fire. Aid in processing emotions and boosting metabolic rate." },
+                    { icon: "🥬", title: "Heart Openers", text: "Green leafy vegetables carry frequency of heart chakra. Promote compassion." }
             ],
             recipes: [
                     { title: "Golden Turmeric Broth", type: "Immunity", time: "45 min", img: "https://picsum.photos/seed/soup/400/300", desc: "Anti-inflammatory blend of turmeric, ginger, and organic veggies." }
             ]
         };
 
+        // NEW: SPONSOR DATA
+        const sponsors = [
+            { name: "Vercel", type: "Tech Guardian", logo: "https://picsum.photos/seed/vercel/100/100", desc: "Global Web Hosting & Speed" },
+            { name: "Supabase", type: "Tech Guardian", logo: "https://picsum.photos/seed/supabase/100/100", desc: "Open Source Database & Auth" },
+            { name: "Global Logistics", type: "Transporter", logo: "https://picsum.photos/seed/truck/100/100", desc: "Fleet & Warehousing" }
+        ];
+
         let userState = {
             role: 'consumer',
             holdings: {}, 
             promoterBalance: 0.00,
             ownerIncome: 0.00,
-            isSteward: false
+            isSteward: false,
+            isSponsor: false // New state for sponsors
         };
         const ledger = [];
 
@@ -546,51 +580,17 @@
             return usdPrice / TTVc_BASE_VALUE;
         }
 
-        // --- NAVIGATION FIXES ---
+        // --- INIT ---
         window.onload = () => {
             renderProducts();
-            renderExchange(); // NEW
+            renderExchange();
             renderKlinik();
+            renderSponsors(); // NEW
             populateSelects();
-            updateDashboard(); // Init dashboard
+            updateDashboard();
         };
 
-        function switchView(view) {
-            // Hide all main sections first
-            const sections = ['view-sourcing', 'view-source-direct', 'view-klinik', 'view-dashboard', 'view-stewards', 'view-constitution'];
-            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
-
-            // Handle Button Active State
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Show Target
-            if(view === 'sourcing') document.getElementById('view-sourcing').classList.remove('hidden');
-            if(view === 'source-direct') document.getElementById('view-source-direct').classList.remove('hidden');
-            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
-            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
-            if(view === 'stewards') document.getElementById('view-stewards').classList.remove('hidden');
-            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
-        }
-
-        function setRole(role) {
-            userState.role = role;
-            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Logic: If switching to Dashboard, switch view automatically
-            if(role === 'consumer' || role === 'owner') {
-                // Stays on current view but updates dashboard
-                updateDashboard();
-                showToast(`Active Role: ${role}`, 'info');
-            } else if (role === 'steward') {
-                switchView('stewards');
-            } else {
-                switchView('dashboard'); // Promoter/Owner views go to dashboard
-            }
-        }
-
-        // --- RENDER FUNCTIONS ---
+        // --- RENDER ---
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
@@ -616,7 +616,10 @@
                         </div>
 
                         <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">
-                            ${ttvcValue.toFixed(2)} TTVc ? / <span style="color:white;">${p.unitType}</span>
+                            ${ttvcValue.toFixed(2)} TTVc ⭐ / <span style="color:white;">${p.unitType}</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--agri); margin-bottom: 1rem;">
+                            ⚡ Fixed Value: Once TTVc is minted, price is locked against 0.1g Gold.
                         </div>
                         
                         <div class="btn-grid">
@@ -644,7 +647,7 @@
                     <div class="cat-tag cat-agri">SourceDirect</div>
                     <div class="card-body">
                         <h3 style="margin: 0.5rem 0;">${p.title}</h3>
-                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">${ttvcValue.toFixed(2)} TTVc ? / ${p.unitType}</div>
+                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">${ttvcValue.toFixed(2)} TTVc ⭐ / ${p.unitType}</div>
                         <div class="btn-grid">
                             <button class="btn btn-primary" onclick="openConvertModal(${p.id})">Store TTVc</button>
                             <button class="btn btn-agri" onclick="openSNFSModal(${p.id})">SNFS Access</button>
@@ -675,6 +678,21 @@
             });
         }
 
+        function renderSponsors() {
+            const wall = document.getElementById('sponsor-wall');
+            wall.innerHTML = '';
+            sponsors.forEach(s => {
+                wall.innerHTML += `
+                    <div class="sponsor-card">
+                        <div class="sponsor-type">${s.type}</div>
+                        <img src="${s.logo}" class="sponsor-logo" alt="${s.name}">
+                        <div class="sponsor-name">${s.name}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">${s.desc}</div>
+                    </div>
+                `;
+            });
+        }
+
         function updateDashboard() {
             const holdingsCount = Object.values(userState.holdings).reduce((a, b) => a + b, 0);
             document.getElementById('dash-holdings').innerText = holdingsCount;
@@ -685,8 +703,19 @@
             const promoterCard = document.getElementById('dash-promoter-card');
             const ownerCard = document.getElementById('dash-owner-card');
             
-            promoterCard.style.display = (userState.role === 'promoter' || userState.role === 'steward') ? 'block' : 'none';
-            ownerCard.style.display = (userState.role === 'owner' || userState.role === 'steward') ? 'block' : 'none';
+            // Promoter/Steward sees Promoter Balance
+            if(userState.role === 'promoter' || userState.role === 'steward') {
+                promoterCard.style.display = 'block';
+            } else {
+                promoterCard.style.display = 'none';
+            }
+
+            // Owner/Steward/Sponsor sees Owner Income
+            if(userState.role === 'owner' || userState.role === 'steward' || userState.role === 'sponsor') {
+                ownerCard.style.display = 'block';
+            } else {
+                ownerCard.style.display = 'none';
+            }
         }
 
         // --- ACTIONS ---
@@ -702,7 +731,7 @@
             
             userState.holdings[pid] = (userState.holdings[pid] || 0) + 1;
             updateVaultCount();
-            addLedgerEntry('CONVERT', `User purchased ${p.title}. Value: ${ttvcVal.toFixed(2)} TTVc ?. 0% Commission.`);
+            addLedgerEntry('CONVERT', `User purchased ${p.title}. Value: ${ttvcVal.toFixed(2)} TTVc ⭐. 0% Commission.`);
             closeModal('modal-convert');
             showToast("Conversion Complete. 100% Value Retained.", 'success');
             updateDashboard();
@@ -717,6 +746,7 @@
         function processSNFS() {
             const amount = parseFloat(document.getElementById('snfs-amount').value);
             if(!amount) return;
+            
             // 20% Split: 10% to Promoter, 10% to Owner
             const promoterShare = amount * 0.10;
             const ownerShare = amount * 0.10;
@@ -761,17 +791,67 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
+        function switchView(view) {
+            // Hide all main sections
+            const sections = ['view-sourcing', 'view-source-direct', 'view-klinik', 'view-dashboard', 'view-stewards', 'view-constitution'];
+            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            // Handle Button Active State
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show Target
+            if(view === 'sourcing') document.getElementById('view-sourcing').classList.remove('hidden');
+            if(view === 'source-direct') document.getElementById('view-source-direct').classList.remove('hidden');
+            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
+            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+            if(view === 'stewards') document.getElementById('view-stewards').classList.remove('hidden');
+            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
+        }
+        function setRole(role) {
+            userState.role = role;
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            updateDashboard();
+            
+            // Logic: If Sponsor, switch to view-dashboard immediately
+            if(role === 'sponsor') {
+                switchView('dashboard');
+            }
+            showToast(`Active Role: ${role}`, 'info');
+        }
+
+        // --- STEWARDSHIP LOGIC (Updated for new UI) ---
         function openJoinModal(roleName) {
             document.getElementById('join-role-display').value = roleName;
             document.getElementById('modal-join').classList.add('open');
         }
-        function processJoin() {
-            // Simulation of steward sign up
-            showToast("Application Received. Welcome to the Family.", 'success');
+
+        function processJoin(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('join-name').value;
+            const email = document.getElementById('join-email').value;
+            
+            if(!name || !email) {
+                alert("Please fill in Name and Email.");
+                return;
+            }
+
+            // Simulation of Steward sign up
+            showToast("Application Received. Welcome to Family.", 'success');
             closeModal('modal-join');
+            
+            // Logically, in a real app, this sends data to backend
+            addLedgerEntry('JOIN', `Stewardship Application: ${name} (${email})`);
+            
+            // Simulate updating user to "Steward" for visual feedback
+            setTimeout(() => {
+                setRole('steward'); 
+                showToast("You are now a Steward (Pending Verification)", 'info');
+            }, 1000);
         }
     </script>
 </body>
 </html>
 ```
-
