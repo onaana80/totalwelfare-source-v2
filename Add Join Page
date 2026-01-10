@@ -1,0 +1,219 @@
+<title>Become a Steward | TotalWelfare</title> <style> :root { --primary: #2563eb; --welfare: #db2777; --accent: #f59e0b; --agri: #10b981; --housing: #6366f1; --general: #f59e0b; --bg-dark: #0f172a; --bg-card: #1e293b; --text-light: #f8fafc; --text-muted: #94a3b8; --border: #334155; --font-main: 'Segoe UI', Roboto, sans-serif; } * { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: var(--font-main); background-color: var(--bg-dark); color: var(--text-light); padding: 100px 20px; }
+    /* SHARED NAVIGATION */
+    .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+    .logo span { color: var(--welfare); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-link { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 1rem; }
+    .nav-link.active, .nav-link:hover { color: var(--accent); border-bottom: 2px solid var(--accent); }
+    .nav-link:hover { color: var(--primary); }
+    .wallet-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+    /* STEWARDSHIP CARDS */
+    .steward-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .steward-card {
+        background: var(--bg-card); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--primary);
+        transition: transform 0.2s; cursor: pointer;
+    }
+    .steward-card:hover { transform: translateX(5px); border-left-color: var(--welfare); }
+    .steward-title { font-size: 1.5rem; margin-bottom: 0.5rem; color: white; }
+    .steward-role { font-size: 0.9rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+    .steward-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .steward-apply { margin-top: auto; color: var(--primary); font-weight: 700; cursor: pointer; }
+
+    /* MODALS */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 500px; max-width: 90%; border: 1px solid var(--border); }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+    .form-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 4px; color: white; }
+
+    @media (max-width: 768px) {
+        .nav-links { flex-direction: column; align-items: stretch; }
+        .steward-grid { grid-template-columns: 1fr; }
+    }
+</style>
+TotalWelfare.source Home Marketplace SourceDirect Klinik Dashboard Become a Steward Constitution
+My TTVc
+<main>
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">Become a Steward</h1>
+        <p style="color: var(--text-muted);">Join us to build the Universal Family. Volunteer your time and expertise.</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid var(--accent);">
+            <strong>Service Policy:</strong> Beneficiaries of voluntary services (e.g., Electricians, Plumbers) receive 90% of TTVc Donation as Gratitude. TotalWelfare retains 10% to maintain Ecosystem.
+        </div>
+    </div>
+
+    <div class="steward-grid">
+        <!-- 1. Tech Steward -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--primary);">1. Tech Steward</div>
+            <div class="steward-role">Developers, Designers, Security Auditors.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Tech')">Apply Now</div>
+        </div>
+        
+        <!-- 2. Legal Steward -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--welfare);">2. Legal Steward</div>
+            <div class="steward-role">Advocates for Natural Law and Non-Commercial Compliance.</div>
+            <div class="steward-desc">Reward: Priority Access & Gratitude Units</div>
+            <div class="steward-apply" onclick="openModal('Legal')">Apply Now</div>
+        </div>
+
+        <!-- 3. Transporter / Deliverer -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--agri);">3. Transporter / Deliverer</div>
+            <div class="steward-role">Movers and Handlers of goods.</div>
+            <div class="steward-desc">Reward: Gratitude Allocation (Logistics Award)</div>
+            <div class="steward-apply" onclick="openModal('Transporter')">Apply Now</div>
+        </div>
+
+        <!-- 4. Builders / Painters / Welders -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--primary);">4. Builders, Painters, Welders</div>
+            <div class="steward-role">Shelter, Visual Arts, and Industrial Stewards.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Builder')">Apply Now</div>
+        </div>
+
+        <!-- 5. Mechanics / Auto / Techs -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--primary);">5. Mechanics & Auto Technicians</div>
+            <div class="steward-role">Doctors of Motion and Machines.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Mechanic')">Apply Now</div>
+        </div>
+
+         <!-- 6. Accountants / Designers / Engineers -->
+         <div class="steward-card">
+            <div class="steward-title" style="color:var(--primary);">6. Accountants, Designers & Engineers</div>
+            <div class="steward-role">Architects of Clarity.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Accountant')">Apply Now</div>
+         </div>
+
+         <!-- 7. Lawyers (Natural Law) -->
+         <div class="steward-card">
+            <div class="steward-title" style="color:var(--welfare);">7. Lawyers (Natural Law)</div>
+            <div class="steward-role">Guardians of Truth.</div>
+            <div class="steward-desc">Reward: TTVc Fixed Value (Not Money)</div>
+            <div class="steward-apply" onclick="openModal('Lawyer')">Apply Now</div>
+         </div>
+
+         <!-- 8. Organic Farmers & Gardeners -->
+         <div class="steward-card">
+            <div class="steward-title" style="color:var(--agri);">8. Organic Farmers & Gardeners</div>
+            <div class="steward-role">Healers of Soil.</div>
+            <div class="steward-desc">Reward: Priority Access to Seeds & Tools</div>
+            <div class="steward-apply" onclick="openModal('Farmer')">Apply Now</div>
+         </div>
+
+        <!-- 9. General Volunteers -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--general);">9. General Volunteers</div>
+            <div class="steward-role">Community Mods & Helpers.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Volunteer')">Apply Now</div>
+        </div>
+
+        <!-- 10. Home & Industrial Automation (General) -->
+        <div class="steward-card">
+            <div class="steward-title" style="color:var(--housing);">10. Home & Industrial Automation</div>
+            <div class="steward-role">Smart Home & Machine Ops.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Auto')">Apply Now</div>
+         </div>
+
+         <!-- 11. Delivery Specialists -->
+         <div class="steward-card">
+            <div class="steward-title" style="color:var(--housing);">11. Delivery Specialists</div>
+            <div class="steward-role">Machine Operators.</div>
+            <div class="steward-desc">Reward: Gratitude Units (TTVc)</div>
+            <div class="steward-apply" onclick="openModal('Delivery')">Apply Now</div>
+         </div>
+    </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-join">
+    <div class="modal-content">
+        <h2 id="join-title" style="color:var(--welfare);">Stewardship Application</h2>
+        <p style="color:var(--text-muted); margin-bottom: 1.5rem;">
+            Join us to build the Universal Family. You must be a Family Member to verify identity before becoming a Steward.
+        </p>
+        <form onsubmit="processJoin(event)">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="join-name" class="form-input" placeholder="Your Full Name" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="join-email" class="form-input" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select id="join-role" class="form-input">
+                    <option value="Tech">Tech Steward</option>
+                    <option value="Legal">Legal Steward</option>
+                    <option value="Transporter">Transporter / Deliverer</option>
+                    <option value="Builder">Builder (Service)</option>
+                    <option value="Mechanic">Mechanic (Service)</option>
+                    <option value="Accountant">Accountant (Service)</option>
+                    <option value="Lawyer">Lawyer (Natural Law)</option>
+                    <option value="Farmer">Organic Farmer (Producer)</option>
+                    <option value="Volunteer">General Volunteer</option>
+                    <option value="Auto">Home & Industrial Automation (Service)</option>
+                    <option value="Delivery">Delivery Specialist (Machine)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Why do you want to join?</label>
+                <textarea class="form-input" rows="3" placeholder="To serve the Universal Family..."></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <button type="button" class="btn btn-outline" onclick="closeModal('modal-join')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Application</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(role) {
+        const title = document.getElementById('join-title');
+        const select = document.getElementById('join-role');
+        
+        // Update Title based on role for UX
+        if(role === 'Tech') title.innerText = "Tech Steward Application";
+        if(role === 'Legal') title.innerText = "Legal Steward Application";
+        if(role === 'Transporter') title.innerText = "Transporter Application";
+        if(role === 'Builder') title.innerText = "Builder Application";
+        if(role === 'Mechanic') title.innerText = "Mechanic Application";
+        if(role === 'Accountant') title.innerText = "Accountant Application";
+        if(role === 'Lawyer') title.innerText = "Lawyer (Natural Law) Application";
+        if(role === 'Farmer') title.innerText = "Organic Farmer Application";
+        if(role === 'Volunteer') title.innerText = "Volunteer Application";
+        if(role === 'Auto') title.innerText = "Home & Industrial Automation Application";
+        if(role === 'Delivery') title.innerText = "Delivery Specialist Application";
+
+        select.value = role;
+        document.getElementById('modal-join').classList.add('open');
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function processJoin(e) {
+        e.preventDefault();
+        const name = document.getElementById('join-name').value;
+        const role = document.getElementById('join-role').value;
+        
+        if(!name) { alert("Please fill in Name."); return; }
+
+        // Simulation
+        alert(`Application Received for ${role}: ${name}. Welcome to Family.`);
+        closeModal('modal-join');
+        // In a real app, this sends data to backend.
+    }
+</script>
