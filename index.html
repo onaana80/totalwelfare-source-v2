@@ -1,21 +1,16 @@
-
-
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TotalWelfare.source | SourceDirect SNFS</title>
+    <title>TotalWelfare.source | Universal Family Ecosystem</title>
     <style>
         :root {
             --primary: #2563eb;
-            --welfare: #db2777; /* Pink/Purple for Mission */
-            --accent: #f59e0b; /* Gold for TTVc/Value */
-            --agri: #10b981; /* Green for Food/Klinik */
-            --housing: #6366f1; /* Indigo for Buildings */
-            --general: #f59e0b; /* New: General/Support color (reuse accent or distinct orange) */
+            --welfare: #db2777;
+            --accent: #f59e0b;
+            --agri: #10b981;
+            --housing: #6366f1;
             --bg-dark: #0f172a;
             --bg-card: #1e293b;
             --text-light: #f8fafc;
@@ -35,16 +30,16 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-top: 70px; /* Space for fixed header */
         }
 
-        /* --- Header --- */
+        /* --- HEADER & NAVIGATION --- */
         header {
             background-color: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid var(--border);
-            position: fixed; top: 0; left: 0; width: 100%;
+            position: sticky; top: 0; left: 0; width: 100%;
             z-index: 100;
             backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .nav-container {
@@ -54,881 +49,106 @@
 
         .logo {
             display: flex; align-items: center; gap: 0.75rem;
-            font-size: 1.1rem; font-weight: 800; color: white; text-decoration: none;
+            font-size: 1.25rem; font-weight: 800; color: white; text-decoration: none;
+            cursor: pointer;
         }
         .logo-icon { color: var(--welfare); }
 
-        .controls { display: flex; gap: 1rem; align-items: center; }
-
-        .role-switcher {
-            display: flex; background: var(--bg-card); border-radius: 99px; padding: 0.25rem; border: 1px solid var(--border);
+        /* Links Container */
+        .nav-links {
+            display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
         }
 
-        .role-btn {
-            padding: 0.4rem 1rem; border-radius: 99px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.3s;
+        .nav-link {
+            color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(255,255,255,255,0.05);
         }
-        .role-btn.active { background: var(--welfare); color: white; }
-
-        .mode-switch { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .mode-btn {
-            padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-light); cursor: pointer; font-size: 0.8rem;
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary); 
+            background: var(--primary);
+            color: white; /* Override text color for active state */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
-        .mode-btn.active { background: var(--primary); border-color: var(--primary); }
-        .mode-btn.klinik-btn.active { background: var(--agri); border-color: var(--agri); }
 
-        .wallet-btn {
-            display: flex; align-items: center; gap: 0.5rem;
+        /* My TTVc Button (Floating) */
+        .wallet-badge {
             background: var(--accent); color: #000;
-            padding: 0.5rem 1rem; border-radius: 6px; border: none;
-            font-weight: 700; cursor: pointer; font-size: 0.85rem;
+            padding: 0.5rem 1.2rem; border-radius: 99px; font-weight: bold; cursor: pointer; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
-
-        /* --- Main Layout --- */
-        main { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 2rem 1rem; }
-        
-        /* IMPORTANT FIX: Hidden elements must be hidden completely */
-        .hidden { display: none !important; }
-
-        /* --- Cards & Grid --- */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: transform 0.2s; position: relative;
-        }
-        .card:hover { transform: translateY(-4px); border-color: var(--welfare); }
-        .card-img { width: 100%; height: 160px; object-fit: cover; }
-        .card-body { padding: 1.5rem; }
-        
-        .cat-tag {
-            position: absolute; top: 10px; left: 10px; font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; color: white; text-transform: uppercase;
-        }
-        .cat-agri { background: var(--agri); }
-        .cat-housing { background: var(--housing); }
-        .cat-factory { background: var(--primary); }
-        .cat-general { background: var(--general); } /* New tag */
-
-        .snfs-tag {
-            position: absolute; top: 10px; right: 10px; background: var(--welfare); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold;
-        }
-
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
-        .btn {
-            width: 100%; padding: 0.6rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: opacity 0.2s;
-        }
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-welfare { background: var(--welfare); color: white; }
-        .btn-agri { background: var(--agri); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-light); }
-
-        /* --- Klinik Specific --- */
-        .klinik-hero {
-            background: linear-gradient(rgba(16, 185, 129, 0.1), rgba(15, 23, 42, 1)), url('https://picsum.photos/seed/foodhero/1200/400');
-            background-size: cover; background-position: center; padding: 4rem 2rem; border-radius: 12px; border: 1px solid var(--agri); text-align: center; margin-bottom: 2rem;
-        }
-        .klinik-section { margin-bottom: 3rem; }
-        .klinik-title { color: var(--agri); font-size: 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .tip-card { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1.5rem; border-radius: 8px; }
-        .tip-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-        .recipe-card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; }
-        .recipe-meta { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- Dashboard --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .stat-card {
-            background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); text-align: center;
-        }
-        .stat-val { font-size: 2.5rem; font-weight: 800; color: var(--welfare); margin: 0.5rem 0; }
-        .stat-label { color: var(--text-muted); font-size: 0.9rem; }
-        .income-badge { background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
-
-        /* --- Stewards & Onboarding --- */
-        .steward-list { display: flex; flex-direction: column; gap: 1rem; }
-        .steward-card {
-            background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary);
-            transition: transform 0.2s; cursor: pointer;
-            display: flex; flex-direction: column; justify-content: space-between; /* New layout */
-        }
-        .steward-card:hover { transform: translateX(5px); border-left-color: var(--welfare); }
-        .steward-icon { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-muted); }
-        .steward-title { margin-bottom: 0.5rem; font-size: 1.1rem; }
-        .steward-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; flex-grow: 1; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 4px; color: white; }
-        
-        /* --- Modals --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .modal-overlay.open { opacity: 1; pointer-events: all; }
-        .modal-content {
-            background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 500px; max-width: 90%; border: 1px solid var(--border);
-            max-height: 90vh; overflow-y: auto;
-        }
-        .welfare-box { background: rgba(219, 39, 119, 0.1); border: 1px solid var(--welfare); color: #fbcfe8; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
-        .direct-msg { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); color: #6ee7b7; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
-
-        /* --- Toast --- */
-        .toast-container { position: fixed; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 1rem; z-index: 2000; }
-        .toast {
-            background: var(--bg-card); border-left: 4px solid var(--primary); padding: 1rem; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.0.5); animation: slideIn 0.3s ease; min-width: 300px; color: white;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .wallet-badge:hover { transform: scale(1.05); }
 
         @media (max-width: 768px) {
-            .nav-container { flex-direction: column; align-items: stretch; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .role-switcher, .mode-switch { justify-content: center; }
-            .btn-grid { grid-template-columns: 1fr; }
-            .app-form-grid { grid-template-columns: 1fr; }
+            .nav-container { flex-direction: column; padding-bottom: 1rem; }
+            .nav-links { flex-direction: column; align-items: stretch; width: 100%; }
+            .nav-link { width: 100%; text-align: center; margin-bottom: 0.5rem; }
+            .wallet-badge { margin-top: 1rem; width: 100%; }
         }
     </style>
 </head>
 <body>
 
+    <!-- MAIN NAVIGATION -->
     <header>
         <div class="nav-container">
+            <!-- LOGO -->
             <a href="#" class="logo">
-                <div style="background:white; color:black; width:32px; height:32px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold;">T</div>
+                <div style="background:white; color:black; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:1.3rem;">T</div>
                 <span>TotalWelfare</span><span class="logo-icon">.source</span>
             </a>
-            
-            <div class="controls">
-                <div class="role-switcher">
-                    <button class="role-btn active" onclick="setRole('consumer')">Family Member</button>
-                    <button class="role-btn" onclick="setRole('owner')">Owner</button>
-                    <button class="role-btn" onclick="setRole('steward')">Steward</button>
-                    <button class="role-btn" onclick="setRole('sponsor')">Sponsor</button>
-                </div>
 
-                <div class="mode-switch">
-                    <button class="mode-btn active" onclick="switchView('sourcing')">Ecosystem</button>
-                    <button class="mode-btn" onclick="switchView('source-direct')">SourceDirect</button>
-                    <button class="mode-btn klinik-btn" onclick="switchView('klinik')">Soul Food Klinik</button>
-                    <button class="mode-btn" onclick="switchView('dashboard')">My Dashboard</button>
-                    <button class="mode-btn" onclick="switchView('stewards')">Join Us</button>
-                    <button class="mode-btn" onclick="switchView('constitution')">Constitution</button>
-                </div>
+            <!-- LINKS TO PAGES -->
+            <nav class="nav-links">
+                <a href="marketplace.html" class="nav-link">Marketplace</a>
+                <a href="sourcedirect.html" class="nav-link">SourceDirect</a>
+                <a href="klinik.html" class="nav-link">Soul Food Klinik</a>
+                <a href="dashboard.html" class="nav-link">My Dashboard</a>
+                <a href="join.html" class="nav-link">Become a Steward</a>
+                <a href="constitution.html" class="nav-link">Constitution</a>
+            </nav>
 
-                <button class="wallet-btn" onclick="switchView('dashboard')">
-                    <span>My TTVc</span>
-                    <span id="vault-badge" style="background:rgba(0,0,0,0.2); padding: 2px 6px; border-radius:4px; font-size:0.8rem">0</span>
-                </button>
+            <!-- MY TTVc BUTTON -->
+            <div class="wallet-badge" onclick="window.location.href='dashboard.html'">
+                <span>My TTVc</span>
+                <span id="vault-badge-mobile" style="background:rgba(0,0,0,0.2); padding: 2px 6px; border-radius:4px; font-size:0.8rem">0</span>
             </div>
         </div>
     </header>
 
-    <main>
-        <!-- VIEW: ECOSYSTEM (OLD SOURCING) -->
-        <section id="view-sourcing">
-            <div style="margin-bottom: 2rem; text-align: center;">
-                <h1>The Collective Welfare Ecosystem</h1>
-                <p style="color: var(--text-muted);">Convert Currency to Tangibles. Store Value. Share Voluntarily.</p>
-            </div>
+    <!-- HERO SECTION -->
+    <main style="flex: 1; text-align: center; padding: 4rem 2rem;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 3rem; margin-bottom: 1.5rem; color: white; text-shadow: 0 4px 12px rgba(0,0,0,0.6);">The Collective Welfare Ecosystem</h1>
+            <p style="color: var(--text-muted); font-size: 1.35rem; line-height: 1.8;">
+                Convert Currency to Tangibles. Store Value. Share Voluntarily. Join the Universal Family.
+            </p>
             
-            <div class="product-grid" id="product-grid">
-                <!-- Products Injected JS -->
+            <div style="margin-top: 2.5rem; text-align: left;">
+                <a href="marketplace.html" style="display: inline-block; background: var(--primary); color: white; padding: 1.5rem 3rem; border-radius: 50px; font-weight: bold; font-size: 1.1rem; text-decoration: none; transition: transform 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.5);">
+                    Enter Ecosystem &rarr;
+                </a>
             </div>
-        </section>
-
-        <!-- VIEW: SOURCEDIRECT (PROVIDER LIST) -->
-        <section id="view-source-direct" class="hidden">
-            <div style="margin-bottom: 2rem; text-align: center;">
-                <h2 style="color:var(--welfare);">SourceDirect SNFS</h2>
-                <p style="color: var(--text-muted);">Where Providers list goods for SourceDirect Custody.</p>
-            </div>
-
-            <div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
-                <h3>1. Provider Listings (Production)</h3>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Manufacturers, Farmers, and Wholesalers who have listed their goods here.</p>
-                <!-- In a real app, this is a list of providers -->
-                <div class="steward-card" style="border-left-color: var(--agri);">
-                    <h4>Golden Harvest Co-op (Agri)</h4>
-                    <p style="font-size: 0.85rem;">Status: <span style="color:var(--success);">Active</span> | Products: 1</p>
-                </div>
-                <div class="steward-card" style="border-left-color: var(--primary);">
-                    <h4>FurniturePro (Factory)</h4>
-                    <p style="font-size: 0.85rem;">Status: <span style="color:var(--success);">Active</span> | Products: 1</p>
-                </div>
-
-                <div style="margin-top: 2rem;">
-                    <button class="btn btn-outline" onclick="showToast('Provider Dashboard coming soon.', 'info')">+ List My Goods (For Providers)</button>
-                </div>
-            </div>
-
-            <div style="margin-top: 2rem;">
-                <h3>2. SourceDirect Access (Exchange)</h3>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Access goods stored in SourceDirect Custody.</p>
-                <div class="product-grid" id="exchange-grid">
-                    <!-- Exchange Items Injected JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW: BECOME A STEWARD (JOIN US) -->
-        <section id="view-stewards" class="hidden">
-            <div style="margin-bottom: 2rem; text-align: center;">
-                <h1>Become a Steward</h1>
-                <p style="color: var(--text-muted);">Join us to build the Universal Family. Volunteer your time and expertise.</p>
-                <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid var(--accent);">
-                    <strong>Service Policy:</strong> Beneficiaries of voluntary services (e.g., Electricians, Plumbers) are awarded 90% of TTVc Donation as Gratitude. TotalWelfare retains 10% to maintain the Ecosystem.
-                </div>
-            </div>
-
-            <div class="steward-list">
-                <!-- SERVICE PROVIDERS -->
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">1. Electricians (Power & Light)</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Power our homes, farms, and factories. No fees, just Gratitude Awards.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Electrician Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">2. Plumbers & Pipefitters</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Ensure water flows. Install fixtures. Earn Gratitude Awards.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Plumbers Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">3. Builders & Masons</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Construct housing one brick at a time. Solid foundations.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Builders Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">4. Painters & Decorators</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Bring color and life to our spaces. Heal eyes and minds.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Artisans Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">5. Welders & Fabricators</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Forge strength. Build structures. Fabricate uniforms.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Fabricators Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">6. Mechanics & Auto Techs</h3>
-                        <div class="cat-tag cat-general">Skilled Trade</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Diagnose problems. Fix machines. Keep wheels turning.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Mechanics Guild.', 'success')">Apply Now</button>
-                </div>
-                
-                <div class="steward-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--primary);">7. Accountants, Designers & Engineers</h3>
-                        <div class="cat-tag cat-general">Professional Services</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Provide structure, clarity, and technical expertise. Track assets securely.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Intel Guild.', 'success')">Apply Now</button>
-                </div>
-
-                <!-- SPECIAL ROLE: LAWYERS (Natural Law) -->
-                <div class="steward-card" style="border-left-color: var(--welfare);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--welfare);">8. Lawyers (Natural Law Defenders)</h3>
-                        <div class="cat-tag cat-general">Professional Services</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Defend Natural Law. Protect Universal Family. Advocate for Truth.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Natural Law Bar.', 'success')">Apply Now</button>
-                </div>
-
-                <!-- GENERAL SUPPORT -->
-                <div class="steward-card" style="border-left-color: var(--general);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--general);">9. General Volunteers</h3>
-                        <div class="cat-tag cat-general">Community</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Help organize events. Provide a smile. Offer a listening ear.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Heart Hands Alliance.', 'success')">Apply Now</button>
-                </div>
-
-                 <div class="steward-card" style="border-left-color: var(--housing);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--housing);">10. Home Automation & Machine Ops</h3>
-                        <div class="cat-tag cat-general">Tech Services</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Install sensors. Manage home systems. Ensure efficiency.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Smart Guild.', 'success')">Apply Now</button>
-                </div>
-                
-                 <div class="steward-card" style="border-left-color: var(--housing);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--housing);">11. Delivery Specialists</h3>
-                        <div class="cat-tag cat-general">Logistics</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Safe delivery. Door-to-door service. The face of TotalWelfare.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Wheels Alliance.', 'success')">Apply Now</button>
-                </div>
-
-                <div class="steward-card" style="border-left-color: var(--agri);">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="color:var(--agri);">12. Organic Farmers & Gardeners</h3>
-                        <div class="cat-tag cat-general">Agri/Producer</div>
-                    </div>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Cultivate soil that heals. Grow food with vitality.</p>
-                    <button class="btn btn-primary steward-submit-btn" onclick="showToast('Application routed to Organic Guild.', 'success')">Apply Now</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW: DASHBOARD -->
-        <section id="view-dashboard" class="hidden">
-            <div class="dashboard-grid">
-                <div class="stat-card">
-                    <h3>My TTVc Vault</h3>
-                    <div class="stat-val" id="dash-holdings">0</div>
-                    <div class="stat-label">Total Items Stored</div>
-                </div>
-                
-                <div class="stat-card" id="dash-service-card">
-                    <h3>Service Income</h3>
-                    <div class="stat-val" id="dash-promoter">0.00</div>
-                    <div class="stat-label">90% Gratitude from Services</div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top:0.5rem;">Earned as Volunteer (Electrician, Plumber, etc.)</p>
-                </div>
-
-                <div class="stat-card" id="dash-owner-card">
-                    <h3>Passive Welfare Support</h3>
-                    <div class="stat-val" id="dash-owner">0.00</div>
-                    <div class="stat-label">Owner Accumulation</div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top:0.5rem;">Generated by SNFS Access to your goods.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW: SOUL FOOD KLINIK -->
-        <section id="view-klinik" class="hidden">
-            <div class="klinik-hero">
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">TotalWelfare Soul Food Klinik</h1>
-                <p style="max-width: 600px; margin: 0 auto; color: #fbcfe8;">
-                    "Let food be thy medicine and medicine be thy food." 
-                    <br>Providing conscious dietary elements, healing recipes, and real organic food access for Universal Family.
-                </p>
-            </div>
-
-            <div class="klinik-section">
-                <h2 class="klinik-title"><span style="font-size:1.8rem;">🧠</span> Conscious Dietary Elements</h2>
-                <div class="tips-grid" id="klinik-tips"></div>
-            </div>
-
-            <div class="klinik-section">
-                <h2 class="klinik-title"><span style="font-size:1.8rem;">🍲</span> Healing Recipes</h2>
-                <div class="product-grid" id="klinik-recipes"></div>
-            </div>
-        </section>
-
-        <!-- VIEW: CONSTITUTION -->
-        <section id="view-constitution" class="hidden">
-            <div class="modal-content" style="width: 100%; max-width: 900px; margin: 0 auto; max-height: 80vh; overflow-y: auto;">
-                <h2 style="color:var(--welfare);">TotalWelfare Universal Family Covenant</h2>
-                <div class="welfare-box" style="background:transparent; border: 1px solid var(--border); color: var(--text-muted); margin-top:1rem;">
-                    <p><strong>PREAMBLE:</strong> TotalWelfare is for The CollectiveWelfare. Facilitating healing of Spirit-Mind-Soul-Heart-Body, Conscious Tools for Enlightenment, Genuine Voluntary Sharing, and Efficient Distribution.</p>
-                    
-                    <h3 style="margin-top:1rem; color:var(--agri);">The Protocol</h3>
-                    <ul style="margin-left: 1.5rem;">
-                        <li><strong>Golden Anchor:</strong> 1 TTVc ⭐ = 0.1g Gold (Universal Standard).</li>
-                        <li><strong>Inbuilt Sharing Cost:</strong> Universal Price includes equitable Logistics, Packing, and Handling costs.</li>
-                        <li><strong>TTVc Fixed Value:</strong> Once issued, TTVc is immutable against future price changes.</li>
-                        <li><strong>Gratitude Allocation (Services):</strong> Volunteers providing skilled services (Electricians, Plumbers, etc.) receive 90% of TTVc Donations as a Gratitude Award. TotalWelfare retains 10% to maintain the Ecosystem.</li>
-                        <li><strong>Gratitude Allocation (Goods Access):</strong> 20% of SNFS Donations split between Promoter & Owner. 0% on Conversions.</li>
-                        <li><strong>Donate-to-Access:</strong> Users without stored TTVc must make a Voluntary Contribution to access goods.</li>
-                        <li><strong>Stewardship:</strong> All Stewards (Tech, Legal, Transporter) act on a Volunteer Basis receiving Gratitude Units, not Wages.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- MODAL: ONBOARDING FORM (DYNAMIC) -->
-    <div class="modal-overlay" id="modal-join">
-        <div class="modal-content">
-            <h2 id="join-title" style="color:var(--welfare);">Stewardship Application</h2>
-            <p style="color:var(--text-muted); margin-bottom: 1.5rem;">
-                Join us to build the Universal Family. You must be a Family Member to verify identity before becoming a Steward.
-            </p>
-            
-            <form onsubmit="processJoin(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="join-name" class="form-input" placeholder="Your Full Name">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="join-email" class="form-input" placeholder="your@email.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>Role</label>
-                    <!-- In a full app, this would be a dropdown. For the v2, we simulate selection via a text input or a set of radio buttons -->
-                    <select id="join-role-select" class="form-input">
-                        <option value="Tech Steward">Tech Steward</option>
-                        <option value="Legal Steward">Legal Steward</option>
-                        <option value="Electrician">Electrician (Service)</option>
-                        <option value="Plumber">Plumber (Service)</option>
-                        <option value="Builder">Builder (Service)</option>
-                        <option value="Painter">Painter (Service)</option>
-                        <option value="Welder">Welder (Service)</option>
-                        <option value="Mechanic">Mechanic (Service)</option>
-                        <option value="Accountant">Accountant (Service)</option>
-                        <option value="Organic Farmer">Organic Farmer (Producer)</option>
-                        <option value="General Volunteer">General Volunteer</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Why do you want to join?</label>
-                    <textarea class="form-input" rows="3" placeholder="To serve the Universal Family..."></textarea>
-                </div>
-
-                <div class="btn-grid">
-                    <button class="btn btn-outline" onclick="closeModal('modal-join')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit Application</button>
-                </div>
-            </form>
+    <!-- FOOTER -->
+    <footer style="background: var(--bg-card); padding: 2rem; text-align: center; margin-top: auto; border-top: 1px solid var(--border);">
+        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
+            <a href="constitution.html" style="color: var(--text-muted); font-size: 0.9rem;">Constitution</a>
+            <a href="join.html" style="color: var(--text-light); font-size: 0.9rem;">Become a Steward</a>
+            <a href="#" style="color: var(--accent); font-size: 0.9rem;">Sponsor (Guardians)</a>
         </div>
-    </div>
-
-    <!-- MODAL: CONVERT TO TTVc -->
-    <div class="modal-overlay" id="modal-convert">
-        <div class="modal-content">
-            <h2>Convert Currency to TTVc</h2>
-            <p style="color:var(--text-muted); margin-bottom: 1rem;">
-                Convert fiat/crypto into stored tangible value based on Universal Tri-Zone Average.
-            </p>
-            <div class="direct-msg">
-                <strong>Direct-to-Source Protocol:</strong> Funds sent directly to Provider. SourceDirect issues TTVc upon receipt.
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display:block; margin-bottom: 0.5rem;">Select Tangible Good</label>
-                <select id="convert-product" style="width:100%; padding:0.5rem; background:var(--bg-dark); color:white; border:1px solid var(--border);"></select>
-            </div>
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display:block; margin-bottom: 0.5rem;">Payment Method</label>
-                <select id="currency-select" style="width:100%; padding:0.5rem; background:var(--bg-dark); color:white; border:1px solid var(--border);">
-                    <option value="USD">USD</option>
-                    <option value="BTC">Bitcoin</option>
-                </select>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; font-weight:bold;">
-                <span>Output:</span>
-                <span style="color: var(--accent);">TTVc Unit (Title Deed)</span>
-            </div>
-            <button class="btn btn-primary" onclick="processConversion()">Execute Direct-to-Source</button>
-            <button class="btn btn-outline" onclick="closeModal('modal-convert')">Cancel</button>
+        <div style="color: var(--text-muted); font-size: 0.8rem;">
+            &copy; 2024 TotalWelfare Source. A Universal Family Trust.
         </div>
-    </div>
+    </footer>
 
-    <!-- MODAL: SNFS ACCESS (DONATE TO ACCESS) -->
-    <div class="modal-overlay" id="modal-snfs">
-        <div class="modal-content">
-            <div class="welfare-box">
-                <h2 style="color:var(--welfare); margin-bottom:0.5rem;">Donate to Access (SNFS)</h2>
-                <p>You don't have TTVc stored for this item. To access, make a Voluntary Contribution to support the ecosystem.</p>
-                <br>
-                <strong>Impact:</strong> 20% of your contribution supports ecosystem (10% Promoter, 10% Owner).
-            </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label style="display:block; margin-bottom: 0.5rem;">Item Request</label>
-                <div id="snfs-item-name" style="font-weight: bold; font-size: 1.1rem; padding: 0.5rem; background: rgba(255,255,255,255,0.05);">Item Name</div>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display:block; margin-bottom: 0.5rem;">Voluntary Contribution Amount</label>
-                <input type="number" id="snfs-amount" value="50" style="width:100%; padding:0.5rem; background:var(--bg-dark); color:white; border:1px solid var(--border);">
-            </div>
-            
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-                Note: 20% of this donation supports ecosystem (10% Promoter, 10% Owner). No taxes on storage conversion.
-            </p>
-            <button class="btn btn-welfare" onclick="processSNFS()">Contribute & Access</button>
-            <button class="btn btn-outline" onclick="closeModal('modal-snfs')">Cancel</button>
-        </div>
-    </div>
+    <!-- OPTIONAL: STATE MANAGER SCRIPT (If you want "My TTVc" count to work) -->
+    <script src="state-manager.js"></script>
 
-    <div class="toast-container" id="toast-container"></div>
-
-    <script>
-        // --- DATA & CONFIG ---
-        const GOLD_PRICE_PER_GRAM = 65.00; // USD
-        const TTVc_ANCHOR_GRAMS = 0.1;
-        const TTVc_BASE_VALUE = GOLD_PRICE_PER_GRAM * TTVc_ANCHOR_GRAMS; // $6.50
-        const UNIVERSAL_LOGISTICS_RATE = 0.10; // 10% Inbuilt Sharing Cost
-
-        const products = [
-            { 
-                id: 1, 
-                title: "Organic Long-Grain Rice", 
-                category: "agriculture", 
-                unitType: "kg", 
-                factory: "Golden Harvest Co-op", 
-                priceNorth: 3.50, 
-                priceDeveloping: 0.80, 
-                priceEmerging: 0.60, 
-                img: "https://picsum.photos/seed/rice/400/300" 
-            },
-            { 
-                id: 2, 
-                title: "Fresh Grade A Tomatoes", 
-                category: "agriculture", 
-                unitType: "crate", 
-                factory: "Sunshine Farms", 
-                priceNorth: 4.00, 
-                priceDeveloping: 1.20, 
-                priceEmerging: 1.00, 
-                img: "https://picsum.photos/seed/tomato/400/300" 
-            },
-            { 
-                id: 3, 
-                title: "Raw Forest Honey", 
-                category: "agriculture", 
-                unitType: "L", 
-                factory: "Bee Keepers United", 
-                priceNorth: 12.00, 
-                priceDeveloping: 8.00, 
-                priceEmerging: 6.00, 
-                img: "https://picsum.photos/seed/honey/400/300" 
-            },
-            { 
-                id: 4, 
-                title: "Eco-Villa Project - Phase 1", 
-                category: "housing", 
-                unitType: "sqm", 
-                factory: "GreenBuild Developers", 
-                priceNorth: 4000, 
-                priceDeveloping: 800, 
-                priceEmerging: 600, 
-                img: "https://picsum.photos/seed/building/400/300" 
-            },
-            { 
-                id: 5, 
-                title: "Ergonomic Office Chair", 
-                category: "factory", 
-                unitType: "unit", 
-                factory: "FurniturePro", 
-                priceNorth: 85.00, 
-                priceDeveloping: 40.00, 
-                priceEmerging: 35.00, 
-                img: "https://picsum.photos/seed/chair/400/300" 
-            }
-        ];
-
-        const klinikContent = {
-            tips: [
-                    { icon: "🥕", title: "Grounding Energy", text: "Root vegetables (Carrots, Beets) connect Spirit to Earth energy. Consuming raw maximizes enzyme intake." },
-                    { icon: "🍋", title: "Solar Plexus Fire", text: "Citrus fruits activate digestive fire. Aid in processing emotions and boosting metabolic rate." },
-                    { icon: "🥬", title: "Heart Openers", text: "Green leafy vegetables carry frequency of heart chakra. Promote compassion." }
-            ],
-            recipes: [
-                    { title: "Golden Turmeric Broth", type: "Immunity", time: "45 min", img: "https://picsum.photos/seed/soup/400/300", desc: "Anti-inflammatory blend of turmeric, ginger, and organic veggies." }
-            ]
-        };
-
-        let userState = {
-            role: 'consumer',
-            holdings: {}, 
-            promoterBalance: 0.00, // This now tracks TOTAL gratitude (Promoter + Service)
-            ownerIncome: 0.00,
-            isSteward: false
-        };
-        const ledger = [];
-
-        // --- CORE LOGIC ---
-        function calculateUniversalPrice(n, d, e) {
-            return (n + d + e) / 3;
-        }
-        function calculateUniversalPriceWithLogistics(productionPrice) {
-            return productionPrice + (productionPrice * UNIVERSAL_LOGISTICS_RATE);
-        }
-        function convertPriceToTTVc(usdPrice) {
-            return usdPrice / TTVc_BASE_VALUE;
-        }
-
-        // --- INIT ---
-        window.onload = () => {
-            renderProducts();
-            renderExchange();
-            renderKlinik();
-            populateSelects();
-            updateDashboard();
-        };
-
-        // --- NAVIGATION ---
-        function switchView(view) {
-            // Hide all main sections
-            const sections = ['view-sourcing', 'view-source-direct', 'view-klinik', 'view-dashboard', 'view-stewards', 'view-constitution'];
-            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
-
-            // Handle Button Active State
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Show Target
-            if(view === 'sourcing') document.getElementById('view-sourcing').classList.remove('hidden');
-            if(view === 'source-direct') document.getElementById('view-source-direct').classList.remove('hidden');
-            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
-            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
-            if(view === 'stewards') document.getElementById('view-stewards').classList.remove('hidden');
-            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
-        }
-
-        function setRole(role) {
-            userState.role = role;
-            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            updateDashboard();
-            showToast(`Active Role: ${role}`, 'info');
-        }
-
-        // --- RENDER ---
-        function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-            products.forEach(p => {
-                const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
-                const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
-                const ttvcValue = convertPriceToTTVc(uniTotal);
-                
-                const catClass = p.category === 'agriculture' ? 'cat-agri' : (p.category === 'housing' ? 'cat-housing' : 'cat-factory');
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${p.img}" class="card-img">
-                    <div class="cat-tag ${catClass}">${p.category}</div>
-                    <div class="snfs-tag">LOGISTICS INCLUDED</div>
-                    <div class="card-body">
-                        <span class="tag" style="background:#333;">${p.factory}</span>
-                        <h3 style="margin: 0.5rem 0; font-size: 1.1rem;">${p.title}</h3>
-                        
-                        <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
-                            Universal Base: $${uniProduction.toFixed(2)} | + Logistics (10%): $${(uniProduction * UNIVERSAL_LOGISTICS_RATE).toFixed(2)}
-                        </div>
-
-                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">
-                            ${ttvcValue.toFixed(2)} TTVc ⭐ / <span style="color:white;">${p.unitType}</span>
-                        </div>
-                        
-                        <div class="btn-grid">
-                            <button class="btn btn-primary" onclick="openConvertModal(${p.id})">Convert (0% Fee)</button>
-                            <button class="btn btn-welfare" onclick="openSNFSModal(${p.id})">SNFS Access</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function renderExchange() {
-            const grid = document.getElementById('exchange-grid');
-            grid.innerHTML = '';
-            products.filter(p => p.category === 'agriculture').forEach(p => {
-                 const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
-                const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
-                const ttvcValue = convertPriceToTTVc(uniTotal);
-                
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${p.img}" class="card-img">
-                    <div class="cat-tag cat-agri">SourceDirect</div>
-                    <div class="card-body">
-                        <h3 style="margin: 0.5rem 0;">${p.title}</h3>
-                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">${ttvcValue.toFixed(2)} TTVc ⭐ / ${p.unitType}</div>
-                        <div class="btn-grid">
-                            <button class="btn btn-primary" onclick="openConvertModal(${p.id})">Store TTVc</button>
-                            <button class="btn btn-agri" onclick="openSNFSModal(${p.id})">SNFS Access</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function renderKlinik() {
-            const tipsContainer = document.getElementById('klinik-tips');
-            tipsContainer.innerHTML = '';
-            klinikContent.tips.forEach(tip => {
-                tipsContainer.innerHTML += `<div class="tip-card"><div class="tip-icon">${tip.icon}</div><h3 style="margin-bottom:0.5rem; color:var(--agri);">${tip.title}</h3><p style="font-size:0.9rem; color:var(--text-muted);">${tip.text}</p></div>`;
-            });
-            const recipeContainer = document.getElementById('klinik-recipes');
-            recipeContainer.innerHTML = '';
-            klinikContent.recipes.forEach(rec => {
-                recipeContainer.innerHTML += `
-                    <div class="recipe-card">
-                        <img src="${rec.img}" style="width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:1rem;">
-                        <div class="recipe-meta">${rec.type} • ${rec.time}</div>
-                        <h3 style="margin-bottom:0.5rem;">${rec.title}</h3>
-                        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">${rec.desc}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function updateDashboard() {
-            const holdingsCount = Object.values(userState.holdings).reduce((a, b) => a + b, 0);
-            document.getElementById('dash-holdings').innerText = holdingsCount;
-            
-            // Update Service Income (New Card)
-            document.getElementById('dash-promoter').innerText = userState.promoterBalance.toFixed(2);
-
-            document.getElementById('dash-owner').innerText = userState.ownerIncome.toFixed(2);
-
-            // Toggle Visibility based on role
-            const serviceCard = document.getElementById('dash-service-card');
-            
-            // If Promoter, Owner, Steward, or Sponsor -> Show Service Income
-            if(userState.role === 'consumer') {
-                serviceCard.style.display = 'none';
-            } else {
-                serviceCard.style.display = 'block';
-            }
-        }
-
-        // --- ACTIONS ---
-        function openConvertModal(pid) {
-            if(pid) document.getElementById('convert-product').value = pid;
-            document.getElementById('modal-convert').classList.add('open');
-        }
-
-        function processConversion() {
-            const pid = document.getElementById('convert-product').value;
-            const p = products.find(x => x.id == pid);
-            const ttvcVal = convertPriceToTTVc(calculateUniversalPriceWithLogistics(calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging)));
-            
-            userState.holdings[pid] = (userState.holdings[pid] || 0) + 1;
-            updateVaultCount();
-            addLedgerEntry('CONVERT', `User purchased ${p.title}. Value: ${ttvcVal.toFixed(2)} TTVc ⭐. 0% Commission.`);
-            closeModal('modal-convert');
-            showToast("Conversion Complete. 100% Value Retained.", 'success');
-            updateDashboard();
-        }
-
-        function openSNFSModal(pid) {
-            const p = products.find(x => x.id == pid);
-            document.getElementById('snfs-item-name').innerText = p.title;
-            document.getElementById('modal-snfs').classList.add('open');
-        }
-
-        function processSNFS() {
-            const amount = parseFloat(document.getElementById('snfs-amount').value);
-            if(!amount) return;
-            
-            // Standard Split for Goods Access (20% total: 10% Promoter, 10% Owner)
-            // NOTE: This is for Access to Goods owned by Owners (Passive Income)
-            const promoterShare = amount * 0.10;
-            const ownerShare = amount * 0.10;
-
-            userState.promoterBalance += promoterShare; 
-            userState.ownerIncome += ownerShare;     
-
-            addLedgerEntry('SNFS', `Donation: $${amount}. Gratitude Allocated: Promoter $${promoterShare.toFixed(2)}, Owner $${ownerShare.toFixed(2)}`);
-            closeModal('modal-snfs');
-            showToast("Contribution Accepted. Goods Dispatched.", 'success');
-            updateDashboard();
-        }
-
-        function updateVaultCount() {
-            let count = 0;
-            Object.values(userState.holdings).forEach(q => count += q);
-            document.getElementById('vault-badge').innerText = count;
-        }
-        function addLedgerEntry(type, desc) {
-            const hash = '0x' + Math.random().toString(16).substr(2, 16);
-            ledger.push({ hash, type, desc });
-        }
-        function populateSelects() { 
-            const sel = document.getElementById('convert-product');
-            if(sel) {
-                sel.innerHTML = '';
-                products.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.id;
-                    opt.text = `${p.title} ($${calculateUniversalPriceWithLogistics(calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging)).toFixed(2)})`;
-                    sel.appendChild(opt);
-                });
-            }
-        }
-        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-        function showToast(msg, type) { 
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeftColor = type === 'success' ? 'var(--agri)' : 'var(--welfare)';
-            toast.innerText = msg;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-        function switchView(view) {
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Show Target
-            if(view === 'sourcing') document.getElementById('view-sourcing').classList.remove('hidden');
-            if(view === 'source-direct') document.getElementById('view-source-direct').classList.remove('hidden');
-            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
-            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
-            if(view === 'stewards') document.getElementById('view-stewards').classList.remove('hidden');
-            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
-        }
-        function setRole(role) {
-            userState.role = role;
-            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            updateDashboard();
-        }
-        function openJoinModal(roleName) {
-            document.getElementById('modal-join').classList.add('open');
-        }
-        function processJoin(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('join-name').value;
-            const email = document.getElementById('join-email').value;
-            const role = document.getElementById('join-role-select').value;
-            
-            if(!name || !email) {
-                alert("Please fill in Name and Email.");
-                return;
-            }
-
-            // Simulate service application logic (for now)
-            if(role === 'Electrician' || role === 'Plumber' || role === 'Builder' || role === 'Mechanic') {
-                showToast("Application Received. Welcome to Service Guild.", 'success');
-                // Logic would be: Add user to a queue for Electricians. When user pays, 90% goes to electrician.
-            } else {
-                showToast("Application Received. Welcome to TotalWelfare.", 'success');
-            }
-
-            closeModal('modal-join');
-            
-            // Logically, in a real app, this sends data to a backend
-            addLedgerEntry('JOIN', `Stewardship Application: ${name} (${email}) - Role: ${role}`);
-            
-            // Simulate updating user to "Steward" for visual feedback
-            setTimeout(() => {
-                setRole('steward'); 
-            }, 1000);
-        }
-    </script>
 </body>
 </html>
-```
