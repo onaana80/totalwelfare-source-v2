@@ -1,0 +1,270 @@
+<title>Marketplace | TotalWelfare</title> <style> :root { --primary: #2563eb; --welfare: #db2777; --accent: #f59e0b; --agri: #10b981; --housing: #6366f1; --general: #f59e0b; --bg-dark: #0f172a; --bg-card: #1e293b; --text-light: #f8fafc; --text-muted: #94a3b8; --border: #334155; --font-main: 'Segoe UI', Roboto, sans-serif; } * { box-sizing: border-box; margin: 0; padding: 0; } body { font-family: var(--font-main); background-color: var(--bg-dark); color: var(--text-light); line-height: 1.6; padding: 100px 20px; }
+    /* SHARED NAVIGATION STYLES */
+    .nav-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .logo { font-size: 1.5rem; font-weight: 800; color: white; text-decoration: none; }
+    .logo span { color: var(--welfare); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-link { color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 1rem; }
+    .nav-link.active, .nav-link:hover { color: var(--accent); border-bottom: 2px solid var(--accent); }
+    .nav-link:hover { color: var(--primary); }
+    .wallet-badge { background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+    /* PRODUCT GRID */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; position: relative; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-4px); border-color: var(--welfare); }
+    .card-img { width: 100%; height: 160px; object-fit: cover; }
+    .card-body { padding: 1.5rem; }
+    .cat-tag { position: absolute; top: 10px; left: 10px; font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; color: white; text-transform: uppercase; }
+    .cat-agri { background: var(--agri); }
+    .cat-housing { background: var(--housing); }
+    .cat-factory { background: var(--primary); }
+    .snfs-tag { position: absolute; top: 10px; right: 10px; background: var(--welfare); color: white; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+    
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; }
+    .btn { width: 100%; padding: 0.6rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-welfare { background: var(--welfare); color: white; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-light); }
+
+    /* MODALS */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-content { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 500px; max-width: 90%; border: 1px solid var(--border); }
+    .modal-title { margin-bottom: 1rem; font-size: 1.5rem; color: white; }
+    .welfare-box { background: rgba(219, 39, 119, 0.1); border: 1px solid var(--welfare); color: #fbcfe8; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-input { width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 4px; color: white; }
+    .toast-container { position: fixed; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 1rem; z-index: 2000; }
+    .toast { background: var(--bg-card); border-left: 4px solid var(--primary); padding: 1rem; border-radius: 4px; color: white; animation: slideIn 0.3s ease; min-width: 300px; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+</style>
+<!-- SHARED HEADER -->
+<div class="nav-header">
+    <a href="index.html" class="logo">TotalWelfare<span>.source</span></a>
+    <nav class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="marketplace.html" class="nav-link active">Marketplace</a>
+        <a href="sourcedirect.html" class="nav-link">SourceDirect</a>
+        <a href="klinik.html" class="nav-link">Klinik</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="join.html" class="nav-link">Join Us</a>
+        <a href="dashboard.html" class="wallet-badge">My TTVc</a>
+    </nav>
+</div>
+
+<main>
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">The Collective Welfare Ecosystem</h1>
+        <p style="color: var(--text-muted);">Convert Currency to Tangibles. Store Value. Share Voluntarily.</p>
+    </div>
+    
+    <div class="grid" id="product-grid">
+        <!-- Injected via JS -->
+    </div>
+</main>
+
+<!-- CONVERT MODAL -->
+<div class="modal-overlay" id="modal-convert">
+    <div class="modal-content">
+        <h2 class="modal-title">Convert Currency to TTVc</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">Convert fiat/crypto into stored tangible value.</p>
+        <div class="form-group">
+            <label>Product</label>
+            <select id="convert-product" class="form-input"></select>
+        </div>
+        <button class="btn btn-primary" onclick="processConversion()">Convert</button>
+        <button class="btn btn-outline" onclick="closeModal('modal-convert')">Cancel</button>
+    </div>
+</div>
+
+<!-- SNFS MODAL -->
+<div class="modal-overlay" id="modal-snfs">
+    <div class="modal-content">
+        <div class="welfare-box">
+            <h2 class="modal-title">Donate to Access (SNFS)</h2>
+            <p>You don't have TTVc stored for this item. To access, make a Voluntary Contribution.</p>
+        </div>
+        <div style="margin-bottom: 1rem;">
+            <label>Item</label>
+            <div id="snfs-item-name" style="font-weight: bold; font-size: 1.1rem; padding: 0.5rem; background: rgba(255,255,255,255,0.05);">Item Name</div>
+        </div>
+        <div class="form-group">
+            <label>Contribution Amount</label>
+            <input type="number" id="snfs-amount" value="50" class="form-input">
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Note: 20% of this donation supports ecosystem (10% Promoter, 10% Owner).</p>
+        <button class="btn btn-welfare" onclick="processSNFS()">Contribute & Access</button>
+        <button class="btn btn-outline" onclick="closeModal('modal-snfs')">Cancel</button>
+    </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+    // --- SHARED CONFIG & STATE MANAGER ---
+    const GOLD_PRICE_PER_GRAM = 65.00;
+    const TTVc_ANCHOR_GRAMS = 0.1;
+    const TTVc_BASE_VALUE = GOLD_PRICE_PER_GRAM * TTVc_ANCHOR_GRAMS;
+    const UNIVERSAL_LOGISTICS_RATE = 0.10;
+
+    const products = [
+        { id: 1, title: "Organic Long-Grain Rice", category: "agriculture", unitType: "kg", factory: "Golden Harvest Co-op", priceNorth: 3.50, priceDeveloping: 0.80, priceEmerging: 0.60, img: "https://picsum.photos/seed/rice/400/300" },
+        { id: 2, title: "Fresh Grade A Tomatoes", category: "agriculture", unitType: "crate", factory: "Sunshine Farms", priceNorth: 4.00, priceDeveloping: 1.20, priceEmerging: 1.00, img: "https://picsum.photos/seed/tomato/400/300" },
+        { id: 3, title: "Raw Forest Honey", category: "agriculture", unitType: "L", factory: "Bee Keepers United", priceNorth: 12.00, priceDeveloping: 8.00, priceEmerging: 6.00, img: "https://picsum.photos/seed/honey/400/300" },
+        { id: 4, title: "Eco-Villa Project", category: "housing", unitType: "sqm", factory: "GreenBuild Developers", priceNorth: 4000, priceDeveloping: 800, priceEmerging: 600, img: "https://picsum.photos/seed/building/400/300" },
+        { id: 5, title: "Ergonomic Office Chair", category: "factory", unitType: "unit", factory: "FurniturePro", priceNorth: 85.00, priceDeveloping: 40.00, priceEmerging: 35.00, img: "https://picsum.photos/seed/chair/400/300" }
+    ];
+
+    // --- SHARED STATE MANAGER FUNCTIONS (Must be in every file) ---
+    function loadState() {
+        const userHoldings = JSON.parse(localStorage.getItem('userHoldings')) || {};
+        const promoterBalance = localStorage.getItem('userPromoterBalance') || "0.00";
+        const ownerIncome = localStorage.getItem('userOwnerIncome') || "0.00";
+
+        // Update UI if elements exist
+        const vault = document.querySelector('.wallet-badge');
+        if(vault) vault.innerText = Object.values(userHoldings).length;
+    }
+
+    function saveHoldings(holdings) {
+        localStorage.setItem('userHoldings', JSON.stringify(holdings));
+        loadState(); // Reloads UI
+    }
+
+    function savePromoterBalance(amount) {
+        localStorage.setItem('userPromoterBalance', amount);
+        loadState();
+    }
+
+    function saveOwnerIncome(amount) {
+        localStorage.setItem('userOwnerIncome', amount);
+        loadState();
+    }
+
+    function addLedgerEntry(type, desc) {
+        // For now, this is a visual mock-up. In a real app, this sends to a database.
+        console.log(`[LEDGER] ${type}: ${desc}`);
+    }
+
+    function showToast(msg, type) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.borderLeftColor = type === 'success' ? 'var(--agri)' : 'var(--welfare)';
+        toast.innerText = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    // --- SPECIFIC PAGE LOGIC ---
+    window.onload = () => {
+        loadState();
+        renderProducts();
+        populateSelects();
+    };
+
+    function calculateUniversalPrice(n, d, e) { return (n + d + e) / 3; }
+    function calculateUniversalPriceWithLogistics(productionPrice) { return productionPrice + (productionPrice * UNIVERSAL_LOGISTICS_RATE); }
+    function convertPriceToTTVc(usdPrice) { return usdPrice / TTVc_BASE_VALUE; }
+
+    function renderProducts() {
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = '';
+        products.forEach(p => {
+            const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
+            const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
+            const ttvcValue = convertPriceToTTVc(uniTotal);
+            
+            const catClass = p.category === 'agriculture' ? 'cat-agri' : (p.category === 'housing' ? 'cat-housing' : 'cat-factory');
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${p.img}" class="card-img">
+                <div class="cat-tag ${catClass}">${p.category}</div>
+                <div class="snfs-tag">LOGISTICS INCLUDED</div>
+                <div class="card-body">
+                    <span style="background:#333; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${p.factory}</span>
+                    <h3 style="margin: 0.5rem 0;">${p.title}</h3>
+                    
+                    <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
+                        Universal Base: $${uniProduction.toFixed(2)} | + Logistics (10%): $${(uniProduction * UNIVERSAL_LOGISTICS_RATE).toFixed(2)}
+                    </div>
+
+                    <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">
+                        ${ttvcValue.toFixed(2)} TTVc ? / <span style="color:white;">${p.unitType}</span>
+                    </div>
+                    
+                    <div class="btn-grid">
+                        <button class="btn btn-primary" onclick="openConvertModal(${p.id})">Convert (0% Fee)</button>
+                        <button class="btn btn-welfare" onclick="openSNFSModal(${p.id})">SNFS Access</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function populateSelects() { 
+        const sel = document.getElementById('convert-product');
+        if(sel) {
+            sel.innerHTML = '';
+            products.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.text = `${p.title} ($${calculateUniversalPriceWithLogistics(calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging)).toFixed(2)})`;
+                sel.appendChild(opt);
+            });
+        }
+    }
+
+    // --- ACTIONS ---
+    function openConvertModal(pid) {
+        if(pid) document.getElementById('convert-product').value = pid;
+        document.getElementById('modal-convert').classList.add('open');
+    }
+
+    function processConversion() {
+        const pid = document.getElementById('convert-product').value;
+        const p = products.find(x => x.id == pid);
+        const ttvcVal = convertPriceToTTVc(calculateUniversalPriceWithLogistics(calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging)));
+        
+        const userHoldings = JSON.parse(localStorage.getItem('userHoldings')) || {};
+        userHoldings[pid] = (userHoldings[pid] || 0) + 1;
+        saveHoldings(userHoldings);
+
+        addLedgerEntry('CONVERT', `User purchased ${p.title}. Value: ${ttvcVal.toFixed(2)} TTVc ?.`);
+        closeModal('modal-convert');
+        showToast("Conversion Complete. 100% Value Retained.", 'success');
+    }
+
+    function openSNFSModal(pid) {
+        const p = products.find(x => x.id == pid);
+        document.getElementById('snfs-item-name').innerText = p.title;
+        document.getElementById('modal-snfs').classList.add('open');
+    }
+
+    function processSNFS() {
+        const amount = parseFloat(document.getElementById('snfs-amount').value);
+        if(!amount) return;
+        
+        // 20% Split: 10% to Promoter, 10% to Owner
+        const promoterShare = amount * 0.10;
+        const ownerShare = amount * 0.10;
+
+        const currentPromoter = parseFloat(localStorage.getItem('userPromoterBalance') || "0.00");
+        const currentOwner = parseFloat(localStorage.getItem('userOwnerIncome') || "0.00");
+
+        savePromoterBalance((currentPromoter + promoterShare).toFixed(2));
+        saveOwnerIncome((currentOwner + ownerShare).toFixed(2));
+
+        addLedgerEntry('SNFS', `Donation: $${amount}. Gratitude Allocated: Promoter $${promoterShare.toFixed(2)}, Owner $${ownerShare.toFixed(2)}`);
+        closeModal('modal-snfs');
+        showToast("Contribution Accepted. Goods Dispatched.", 'success');
+    }
+</script>
+
