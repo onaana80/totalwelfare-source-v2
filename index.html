@@ -7,10 +7,11 @@
     <style>
         :root {
             --primary: #2563eb;
-            --welfare: #db2777; /* Pink/Purple for Mission */
-            --accent: #f59e0b; /* Gold for TTVc/Value */
-            --agri: #10b981; /* Green for Food/Klinik */
-            --housing: #6366f1; /* Indigo for Buildings */
+            --welfare: #db2777;
+            --accent: #f59e0b;
+            --agri: #10b981;
+            --housing: #6366f1;
+            --general: #f59e0b;
             --bg-dark: #0f172a;
             --bg-card: #1e293b;
             --text-light: #f8fafc;
@@ -30,16 +31,17 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-top: 70px;
         }
 
         /* --- HEADER & NAVIGATION --- */
         header {
             background-color: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; left: 0; width: 100%;
+            position: fixed; top: 0; left: 0; width: 100%;
             z-index: 100;
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
@@ -60,33 +62,18 @@
         }
 
         .nav-link {
-            color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
+            color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
             border-radius: 8px;
             background: rgba(255,255,255,255,0.05);
         }
         .nav-link:hover, .nav-link.active {
             color: var(--primary); 
             background: var(--primary);
-            color: white; /* Override text color for active state */
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         .controls { display: flex; gap: 1rem; align-items: center; }
-
-        /* My TTVc Button (Floating) */
-        .wallet-badge {
-            background: var(--accent); color: #000;
-            padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 0.95rem;
-            display: flex; align-items: center; gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .wallet-badge:hover { transform: scale(1.05); }
-        .wallet-badge:active {
-            background: #fff; /* White ring when clicked/active */
-            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.5);
-        }
 
         /* --- HERO SECTION --- */
         .hero {
@@ -98,7 +85,7 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem; margin-bottom: 1rem; line-height: 1.2; color: white; text-shadow: 0 4px 8px rgba(0,0,0,0.6);
+            font-size: 3.5rem; margin-bottom: 1rem; line-height: 1.2; color: white; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         }
         .hero p {
             font-size: 1.35rem; color: var(--text-light); max-width: 700px; margin: 0 auto; font-weight: 300; line-height: 1.8;
@@ -113,9 +100,9 @@
         .feature-card {
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; text-align: left; transition: transform 0.3s; position: relative; overflow: hidden;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .feature-card:hover { transform: translateY(-8px); border-color: var(--welfare); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .feature-card:hover { transform: translateY(-8px); border-color: var(--welfare); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
         .feature-icon {
             font-size: 3rem; margin-bottom: 1.5rem; display: block;
         }
@@ -128,7 +115,7 @@
         }
 
         /* --- FOOTER --- */
-        .footer {
+        footer {
             background-color: rgba(15, 23, 42, 0.98);
             border-top: 1px solid var(--border); padding: 2rem; text-align: center; margin-top: auto;
             color: var(--text-muted); font-size: 0.9rem;
@@ -136,7 +123,6 @@
 
         @media (max-width: 768px) {
             .nav-container { flex-direction: column; align-items: stretch; }
-            .nav-links { flex-direction: column; align-items: stretch; width: 100%; }
             .feature-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 2.5rem; }
             .hero p { font-size: 1.2rem; }
@@ -145,6 +131,7 @@
 </head>
 <body>
 
+    <!-- MAIN NAVIGATION -->
     <header>
         <div class="nav-container">
             <!-- LOGO -->
@@ -153,7 +140,7 @@
                 <span>TotalWelfare</span><span class="logo-icon">.source</span>
             </a>
 
-            <!-- LINKS -->
+            <!-- LINKS TO PAGES -->
             <nav class="nav-links">
                 <a href="marketplace.html" class="nav-link">Ecosystem</a>
                 <a href="sourcedirect.html" class="nav-link">SourceDirect</a>
@@ -164,10 +151,8 @@
             </nav>
 
             <!-- WALLET BUTTON -->
-            <a href="dashboard.html" class="wallet-badge" title="View my TTVc Vault">
+            <a href="dashboard.html" class="wallet-badge">
                 <span>My TTVc</span>
-                <!-- Badge Number is now handled by dashboard.html script, but we show a placeholder here -->
-                <span id="vault-badge-home" style="background:rgba(0,0,0,0.2); padding: 2px 6px; border-radius:4px; font-size:0.8rem; color:white;">0</span>
             </a>
         </div>
     </header>
@@ -176,8 +161,11 @@
         <!-- HERO SECTION -->
         <section class="hero">
             <h1>The Collective Welfare Ecosystem</h1>
-            <p>Convert Currency to Tangibles. Store Value. Share Voluntarily. Join the Universal Family.</p>
-            <a href="join.html" class="hero-btn">Join Universal Family</a>
+            <p>Convert Currency to Tangibles. Store Value. Share Voluntarily. Join Universal Family.</p>
+            
+            <div style="margin-top: 2.5rem; text-align: left;">
+                <a href="join.html" class="hero-btn">Join Universal Family</a>
+            </div>
         </section>
 
         <!-- FEATURE CARDS -->
@@ -220,21 +208,10 @@
     <footer>
         <p>&copy; 2024 TotalWelfare Source. A Universal Family Trust.</p>
         <div style="margin-top: 1rem;">
-            <a href="constitution.html" style="color: var(--text-light); font-size: 0.9rem;">Constitution</a> | 
-            <a href="join.html" style="color: var(--text-light); font-size: 0.9rem;">Become a Steward</a> | 
-            <a href="#" style="color: var(--accent); font-size: 0.9rem;">Sponsor (Guardians)</a>
+            <a href="constitution.html" style="color: var(--text-light); font-size: 0.85rem;">Constitution</a> | 
+            <a href="join.html" style="color: var(--text-light); font-size: 0.85rem;">Become a Steward</a> | 
+            <a href="#" style="color: var(--accent); font-size: 0.85rem;">Sponsor (Guardians)</a>
         </div>
     </footer>
-
-    <!-- OPTIONAL: STATE MANAGER SCRIPT (Only for the Vault Badge Home) -->
-    <script>
-        // Minimal script to sync vault badge from dashboard.html
-        function loadState() {
-            const savedHoldings = JSON.parse(localStorage.getItem('userHoldings')) || {};
-            const vaultBadge = document.getElementById('vault-badge-home');
-            if(vaultBadge) vaultBadge.innerText = Object.values(savedHoldings).length;
-        }
-        window.onload = loadState;
-    </script>
 </body>
 </html>
