@@ -1,154 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TotalWelfare.source | Universal Family Ecosystem</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --welfare: #db2777;
-            --accent: #f59e0b;
-            --agri: #10b981;
-            --housing: #6366f1;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --font-main: 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'Courier New', monospace;
-        }
+// --- SHARED STATE MANAGER (Universal Logic for All Pages) ---
+// This script handles your TTVc Vault, Promoter Income, and Owner Income
+// It loads from 'localStorage' so your counts update even if you switch pages.
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+(function() {
+    // 1. Load State from Storage (Prevent errors on load)
+    const savedHoldings = JSON.parse(localStorage.getItem('userHoldings')) || '{}';
+    const savedPromoterBalance = parseFloat(localStorage.getItem('userPromoterBalance')) || 0.00;
+    const savedOwnerIncome = parseFloat(localStorage.getItem('userOwnerIncome')) || 0.00;
 
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    // 2. Save State Helper Functions
+    window.saveHoldings = function(holdings) {
+        const json = JSON.stringify(holdings);
+        localStorage.setItem('userHoldings', json);
+        updateDashboardVisuals(); // Update any visible badges immediately
+    };
 
-        /* --- HEADER & NAVIGATION --- */
-        header {
-            background-color: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; left: 0; width: 100%;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+    window.savePromoterBalance = function(amount) {
+        localStorage.setItem('userPromoterBalance', amount.toString());
+        updateDashboardVisuals();
+    };
 
-        .nav-container {
-            max-width: 1400px; margin: 0 auto; padding: 1rem;
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
-        }
+    window.saveOwnerIncome = function(amount) {
+        localStorage.setItem('userOwnerIncome', amount.toString());
+        updateDashboardVisuals();
+    };
 
-        .logo {
-            display: flex; align-items: center; gap: 0.75rem;
-            font-size: 1.25rem; font-weight: 800; color: white; text-decoration: none;
-            cursor: pointer;
-        }
-        .logo-icon { color: var(--welfare); }
+    // 3. Update Visuals Helper (Connects HTML elements to Data)
+    window.updateDashboardVisuals = function() {
+        const vaultBadge = document.querySelector('.wallet-badge');
+        if(vaultBadge) vaultBadge.innerText = Object.values(savedHoldings).length;
 
-        /* Links Container */
-        .nav-links {
-            display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
-        }
+        // Update Income Badges
+        const promoterBadge = document.getElementById('dash-promoter');
+        const ownerBadge = document.getElementById('dash-owner');
 
-        .nav-link {
-            color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
-            border-radius: 8px;
-            background: rgba(255,255,255,255,0.05);
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary); 
-            background: var(--primary);
-            color: white; /* Override text color for active state */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
+        if(promoterBadge) promoterBadge.innerText = `$${savedPromoterBalance.toFixed(2)}`;
+        if(ownerBadge) ownerBadge.innerText = `$${savedOwnerIncome.toFixed(2)}`;
+    };
 
-        /* My TTVc Button (Floating) */
-        .wallet-badge {
-            background: var(--accent); color: #000;
-            padding: 0.5rem 1.2rem; border-radius: 99px; font-weight: bold; cursor: pointer; font-size: 0.95rem;
-            display: flex; align-items: center; gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .wallet-badge:hover { transform: scale(1.05); }
+    // 4. Expose Helper Functions (For use in other pages)
+    window.getSavedHoldings = function() { return savedHoldings; };
+    window.getSavedPromoterBalance = function() { return savedPromoterBalance; };
+    window.getSavedOwnerIncome = function() { return savedOwnerIncome; };
 
-        @media (max-width: 768px) {
-            .nav-container { flex-direction: column; padding-bottom: 1rem; }
-            .nav-links { flex-direction: column; align-items: stretch; width: 100%; }
-            .nav-link { width: 100%; text-align: center; margin-bottom: 0.5rem; }
-            .wallet-badge { margin-top: 1rem; width: 100%; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- MAIN NAVIGATION -->
-    <header>
-        <div class="nav-container">
-            <!-- LOGO -->
-            <a href="#" class="logo">
-                <div style="background:white; color:black; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:1.3rem;">T</div>
-                <span>TotalWelfare</span><span class="logo-icon">.source</span>
-            </a>
-
-            <!-- LINKS TO PAGES -->
-            <nav class="nav-links">
-                <a href="marketplace.html" class="nav-link">Marketplace</a>
-                <a href="sourcedirect.html" class="nav-link">SourceDirect</a>
-                <a href="klinik.html" class="nav-link">Soul Food Klinik</a>
-                <a href="dashboard.html" class="nav-link">My Dashboard</a>
-                <a href="join.html" class="nav-link">Become a Steward</a>
-                <a href="constitution.html" class="nav-link">Constitution</a>
-            </nav>
-
-            <!-- MY TTVc BUTTON -->
-            <div class="wallet-badge" onclick="window.location.href='dashboard.html'">
-                <span>My TTVc</span>
-                <span id="vault-badge-mobile" style="background:rgba(0,0,0,0.2); padding: 2px 6px; border-radius:4px; font-size:0.8rem">0</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- HERO SECTION -->
-    <main style="flex: 1; text-align: center; padding: 4rem 2rem;">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <h1 style="font-size: 3rem; margin-bottom: 1.5rem; color: white; text-shadow: 0 4px 12px rgba(0,0,0,0.6);">The Collective Welfare Ecosystem</h1>
-            <p style="color: var(--text-muted); font-size: 1.35rem; line-height: 1.8;">
-                Convert Currency to Tangibles. Store Value. Share Voluntarily. Join the Universal Family.
-            </p>
-            
-            <div style="margin-top: 2.5rem; text-align: left;">
-                <a href="marketplace.html" style="display: inline-block; background: var(--primary); color: white; padding: 1.5rem 3rem; border-radius: 50px; font-weight: bold; font-size: 1.1rem; text-decoration: none; transition: transform 0.3s; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.5);">
-                    Enter Ecosystem &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer style="background: var(--bg-card); padding: 2rem; text-align: center; margin-top: auto; border-top: 1px solid var(--border);">
-        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
-            <a href="constitution.html" style="color: var(--text-muted); font-size: 0.9rem;">Constitution</a>
-            <a href="join.html" style="color: var(--text-light); font-size: 0.9rem;">Become a Steward</a>
-            <a href="#" style="color: var(--accent); font-size: 0.9rem;">Sponsor (Guardians)</a>
-        </div>
-        <div style="color: var(--text-muted); font-size: 0.8rem;">
-            &copy; 2024 TotalWelfare Source. A Universal Family Trust.
-        </div>
-    </footer>
-
-    <!-- OPTIONAL: STATE MANAGER SCRIPT (If you want "My TTVc" count to work) -->
-    <script src="state-manager.js"></script>
-
-</body>
-</html>
+    console.log("State Manager Loaded. Vault: " + Object.values(savedHoldings).length);
+})();
