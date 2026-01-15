@@ -6,12 +6,12 @@
     <title>TotalWelfare.source | Universal Family Ecosystem</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --welfare: #db2777;
-            --accent: #f59e0b;
-            --agri: #10b981;
-            --housing: #6366f1;
-            --general: #f59e0b;
+            --primary: #2563eb; --welfare: #db2777; /* Pink/Purple for Mission */
+            --accent: #f59e0b; /* Gold for TTVc/Value */
+            --agri: #10b981; /* Green for Food/Klinik */
+            --housing: #6366f1; /* Indigo for Buildings */
+            --general: #f59e0b; /* Reusing accent for general */
+
             --bg-dark: #0f172a;
             --bg-card: #1e293b;
             --text-light: #f8fafc;
@@ -29,23 +29,23 @@
             color: var(--text-light);
             line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding-top: 70px;
+            display: flex; flex-direction: column;
+            padding-top: 75px; /* Space for Fixed Header */
+            padding-bottom: 0; margin-bottom: 3rem;
         }
 
         /* --- HEADER & NAVIGATION --- */
         header {
             background-color: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid var(--border);
-            position: fixed; top: 0; left: 0; width: 100%;
+            position: sticky; top: 0; left: 0; width: 100%;
             z-index: 100;
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .nav-container {
-            max-width: 1400px; margin: 0 auto; padding: 1rem;
+            max-width: 1400px; margin: 0 auto; padding: 1.5rem;
             display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;
         }
 
@@ -54,164 +54,500 @@
             font-size: 1.25rem; font-weight: 800; color: white; text-decoration: none;
             cursor: pointer;
         }
-        .logo-icon { color: var(--welfare); }
+        .logo span { color: var(--welfare); }
 
-        /* Link Container */
+        /* Links Container */
         .nav-links {
             display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
         }
 
         .nav-link {
-            color: var(--text-light); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
+            color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; padding: 0.5rem 1rem;
             border-radius: 8px;
             background: rgba(255,255,255,255,0.05);
         }
-        .nav-link:hover, .nav-link.active {
+        .nav-link.active, .nav-link:hover { 
             color: var(--primary); 
             background: var(--primary);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary);
+        }
+        .nav-link:hover { color: var(--primary); } /* Reset hover color so it doesn't look weird when active */
+        .nav-link.active { /* Override: Style for active state */
+            color: white !important;
+            border-bottom: 1px solid var(--primary);
         }
 
         .controls { display: flex; gap: 1rem; align-items: center; }
 
-        /* --- HERO SECTION --- */
+        /* My TTVc Wallet Button (Floating) */
+        .wallet-badge {
+            background: var(--accent); color: #000;
+            padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform: 0.2s;
+        }
+        .wallet-badge:hover { transform: scale(1.05); }
+
+        /* Hero Styles */
         .hero {
             padding: 6rem 2rem; text-align: center;
-            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.2), rgba(15, 23, 42, 1)), url('https://picsum.photos/seed/hero/1200/600');
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.2), rgba(15, 23, 42, 0.95)), url('https://picsum.photos/seed/hero/1200/600');
             background-size: cover; background-position: center;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 3rem;
+            border-bottom: 3rem;
         }
-
         .hero h1 {
-            font-size: 3.5rem; margin-bottom: 1rem; line-height: 1.2; color: white; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            font-size: 3rem; margin-bottom: 1.5rem; color: white; text-shadow: 0 4px 8px rgba(0,0,0,0.6);
         }
         .hero p {
             font-size: 1.35rem; color: var(--text-light); max-width: 700px; margin: 0 auto; font-weight: 300; line-height: 1.8;
         }
-        .hero-btn {
-            display: inline-block; background: var(--welfare); color: white; padding: 1rem 2.5rem; border-radius: 50px; font-weight: 700; margin-top: 2.5rem; text-decoration: none; font-size: 1.2rem; transition: transform 0.3s; box-shadow: 0 10px 20px rgba(219, 39, 119, 0.5);
-        }
-        .hero-btn:hover { transform: translateY(-2px); background: #e11d48; }
 
-        /* --- CARDS GRID --- */
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; padding: 2rem; }
+        /* Feature Cards Grid (Marketplace) */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding: 2rem; }
         .feature-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; text-align: left; transition: transform 0.3s; position: relative; overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: relative; transition: transform: 0.2s; cursor: pointer;
         }
-        .feature-card:hover { transform: translateY(-8px); border-color: var(--welfare); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
-        .feature-icon {
-            font-size: 3rem; margin-bottom: 1.5rem; display: block;
+        .feature-card:hover { transform: translateY(-8px); border-color: var(--welfare); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+        .feature-icon { font-size: 3rem; margin-bottom: 1.5rem; display: block; }
         .feature-title { font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; color: white; }
-        .feature-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.5; }
+        .feature-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5rem; }
         .feature-link {
-            display: block; margin-top: auto; color: var(--accent); font-weight: 700; text-decoration: none; font-size: 1.1rem;
+            display: block; margin-top: auto; color: var(--accent); font-weight: 700; text-decoration: font-size: 1.1rem;
             text-align: center; padding-top: 1rem;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(245, 245, 255, 255, 0.1); border-radius: 8px;
         }
+        .feature-link:hover { text-decoration: underline; color: var(--text-light); }
 
-        /* --- FOOTER --- */
-        footer {
-            background-color: rgba(15, 23, 42, 0.98);
-            border-top: 1px solid var(--border); padding: 2rem; text-align: center; margin-top: auto;
-            color: var(--text-muted); font-size: 0.9rem;
+        /* Dashboard Grid */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .stat-card {
+            background: var(--bg-card); padding: 2.5rem; border-radius: 12px; border: 1px solid var(--border); text-align: center;
         }
+        .stat-val { font-size: 2.5rem; font-weight: 800; color: var(--welfare); margin: 0.5rem 0; }
+        .stat-label { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Ledger (Visual Representation) */
+        .terminal {
+            background: #000; color: #33ff00; font-family: 'Courier New', monospace; padding: 1.5rem; border-radius: 12px; height: 300px; overflow-y: auto; border: 1px solid #333; font-size: 0.85rem;
+        }
+        .ledger-entry { border-bottom: 1px solid #111; padding: 0.5rem 0; display: grid; grid-template-columns: 1fr 3fr; gap: 1rem; }
+        .hash { color: #666; font-size: 0.8rem; }
+        .type { font-weight: bold; }
+        .type.SNFS { color: var(--welfare); } /* SNFS Gratitude */
+        .type.SERVICE { color: var(--general); } /* Service Steward Awards */
+        .type.CONVERT { color: var(--primary); }
+        .type.GIFT { color: var(--accent); }
 
         @media (max-width: 768px) {
-            .nav-container { flex-direction: column; align-items: stretch; }
-            .feature-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 2.5rem; }
-            .hero p { font-size: 1.2rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .stat-val { font-size: 2.5rem; } /* Smaller font size on mobile */
+            .stat-label { font-size: 0.8rem; } /* Smaller font size on mobile */
         }
     </style>
 </head>
 <body>
 
-    <!-- MAIN NAVIGATION -->
+    <!-- SHARED HEADER -->
     <header>
         <div class="nav-container">
             <!-- LOGO -->
-            <a href="#" class="logo" onclick="window.scrollTo(0,0);">
-                <div style="background:white; color:black; width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:1.3rem;">T</div>
+            <a href="#" class="logo">
+                <div style="background:white; color:black; width:45px; height:45px; border-radius: 50%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size: 1.3rem;">T</div>
                 <span>TotalWelfare</span><span class="logo-icon">.source</span>
             </a>
 
-            <!-- LINKS TO PAGES -->
+            <!-- LINKS -->
             <nav class="nav-links">
-                <a href="marketplace.html" class="nav-link">Ecosystem</a>
-                <a href="sourcedirect.html" class="nav-link">SourceDirect</a>
-                <a href="klinik.html" class="nav-link">Soul Food Klinik</a>
-                <a href="dashboard.html" class="nav-link">My Dashboard</a>
-                <a href="join.html" class="nav-link">Become a Steward</a>
-                <a href="constitution.html" class="nav-link">Constitution</a>
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">Marketplace</a>
+                <a href="#" class="nav-link">SourceDirect</a>
+                <a href="#" class="nav-link">Soul Food Klinik</a>
+                <a href="#" class="nav-link">My Dashboard</a>
+                <a href="#" class="nav-link">Become a Steward</a>
+                <a href="#" class="nav-link">Constitution</a>
             </nav>
 
             <!-- WALLET BUTTON -->
-            <a href="dashboard.html" class="wallet-badge">
-                <span>My TTVc</span>
-            </a>
+            <a href="#" class="wallet-btn" id="go-dashboard">My TTVc<span id="vault-badge" style="background:rgba(0,0, 0, 0.2); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem;">0</span></a>
         </div>
     </header>
 
+    <!-- MAIN CONTENT HUB -->
     <main>
         <!-- HERO SECTION -->
         <section class="hero">
-            <h1>The Collective Welfare Ecosystem</h1>
-            <p>Convert Currency to Tangibles. Store Value. Share Voluntarily. Join Universal Family.</p>
+            <h1 style="font-size: 3rem; margin-bottom: 1.5rem; color: white; text-shadow: 0 4px 8px rgba(0, 0, 0.6);">The Collective Welfare Ecosystem</h1>
+            <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto; font-weight: 300; line-height: 1.8;">
+                Convert Currency to Tangibles. Store Value. Share Voluntarily. Join the Universal Family.
+            </p>
             
             <div style="margin-top: 2.5rem; text-align: left;">
-                <a href="join.html" class="hero-btn">Join Universal Family</a>
+                <a href="#" style="display: inline-block; background: var(--welfare); color: white; padding: 1.5rem 3rem; border-radius: 50px; font-weight: 700; margin-top: 2.5rem; text-decoration: none; font-size: 1.2rem; transition: transform: 0.3s; box-shadow: 0 10px 20px rgba(219, 39, 119, 0.5);">
+                    Enter Ecosystem &rarr;
+                </a>
             </div>
         </section>
 
-        <!-- FEATURE CARDS -->
-        <section class="feature-grid">
-            <!-- Card 1: Ecosystem -->
+        <!-- FEATURE CARDS GRID (Marketplace) -->
+        <section class="feature-grid" id="market-grid">
+            <!-- 1. Ecosystem -->
             <div class="feature-card" onclick="window.location.href='marketplace.html'">
                 <span class="feature-icon">🌿</span>
                 <h2 class="feature-title">Ecosystem Marketplace</h2>
                 <p class="feature-desc">Browse products from Manufacturers, Farmers, and Wholesalers. Convert currency to TTVc and store tangible value.</p>
-                <a href="marketplace.html" class="feature-link">Explore Marketplace &rarr;</a>
+                <a href="#" class="feature-link">Explore Marketplace &rarr;</a>
             </div>
 
-            <!-- Card 2: SourceDirect -->
+            <!-- 2. SourceDirect -->
             <div class="feature-card" onclick="window.location.href='sourcedirect.html'">
                 <span class="feature-icon">🏭</span>
                 <h2 class="feature-title">SourceDirect SNFS</h2>
                 <p class="feature-desc">Where Providers list goods for SourceDirect Custody. Access products stored in SourceDirect Custody via SNFS.</p>
-                <a href="sourcedirect.html" class="feature-link">Go to SourceDirect &rarr;</a>
+                <a href="#" class="feature-link">Go to SourceDirect &rarr;</a>
             </div>
 
-            <!-- Card 3: Soul Food Klinik -->
+            <!-- 3. Soul Food Klinik -->
             <div class="feature-card" onclick="window.location.href='klinik.html'">
                 <span class="feature-icon">🍃</span>
                 <h2 class="feature-title">Soul Food Klinik</h2>
                 <p class="feature-desc">Conscious dietary elements, healing recipes, and real organic food access. Tools to heal Spirit-Mind-Soul-Body.</p>
-                <a href="klinik.html" class="feature-link">Visit Klinik &rarr;</a>
+                <a href="#" class="feature-link">Visit Klinik &rarr;</a>
             </div>
 
-            <!-- Card 4: Dashboard -->
+            <!-- 4. Dashboard -->
             <div class="feature-card" onclick="window.location.href='dashboard.html'">
                 <span class="feature-icon">📊</span>
                 <h2 class="feature-title">My Welfare Dashboard</h2>
                 <p class="feature-desc">Your personal TTVc Vault, Gratitude Awards from services, and Passive Welfare Support generation.</p>
-                <a href="dashboard.html" class="feature-link">Open Dashboard &rarr;</a>
+                <a href="#" class="feature-link">Open Dashboard &rarr;</a>
             </div>
         </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2024 TotalWelfare Source. A Universal Family Trust.</p>
-        <div style="margin-top: 1rem;">
-            <a href="constitution.html" style="color: var(--text-light); font-size: 0.85rem;">Constitution</a> | 
-            <a href="join.html" style="color: var(--text-light); font-size: 0.85rem;">Become a Steward</a> | 
-            <a href="#" style="color: var(--accent); font-size: 0.85rem;">Sponsor (Guardians)</a>
-        </div>
-    </footer>
+        <!-- DASHBOARD (Hidden by default, visible via "My TTVc" button or URL hash routing) -->
+        <section class="dashboard-grid" id="dashboard-grid">
+            <!-- Vault -->
+            <div class="stat-card">
+                <div class="stat-label">My TTVc Vault</div>
+                <div class="stat-val" id="dash-holdings">0</div>
+                <div class="stat-label">Total Items Stored</div>
+            </div>
+
+            <!-- Service Income (Promoter/Steward) -->
+            <div class="stat-card">
+                <div class="stat-label">Gratitude Awards (Services)</div>
+                <div class="stat-val" id="dash-promoter">0.00</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    Includes awards from Transporter, Deliverer, Tech, Legal Services.
+                </p>
+            </div>
+
+            <!-- Passive Income (Owner) -->
+            <div class="stat-card">
+                <div class="stat-label">Passive Welfare Support</div>
+                <div class="stat-val" id="dash-owner">0.00</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Generated by SNFS Access to your goods.</p>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div style="background: rgba(15, 23, 42, 0.98); border-top: 1px solid var(--border); padding: 2rem; text-align: center; margin-top: auto;">
+                <p>&copy; 2024 TotalWelfare Source. A Universal Family Trust.</p>
+                <div style="margin-top: 1rem;">
+                    <a href="#" style="color: var(--text-light); font-size: 0.85rem;">Constitution</a> | 
+                    <a href="#" style="color: var(--text-light); font-size: 0.85rem;">Become a Steward</a> | 
+                    <a href="#" style="color: var(--accent); font-size: 0.85rem;">Sponsor (Guardians)</a>
+                </div>
+        </footer>
+
+        <!-- STATE MANAGER (Hidden Script) -->
+        <script>
+            // --- SHARED CONFIG & STATE MANAGER (Universal Logic) ---
+            const GOLD_PRICE_PER_GRAM = 65.00; // USD
+            const TTVc_ANCHOR_GRAMS = 0.1;
+            const TTVc_BASE_VALUE = GOLD_PRICE_PER_GRAM * TTVc_ANCHOR_GRAMS; // $6.50
+            const UNIVERSAL_LOGISTICS_RATE = 0.10; // 10% Inbuilt Sharing Cost
+            const products = [
+                { 
+                        id: 1, title: "Organic Long-Grain Rice", category: "agriculture", unitType: "kg", factory: "Golden Harvest Co-op", priceNorth: 3.50, priceDeveloping: 0.80, priceEmerging: 0.60, img: "https://picsum.photos/seed/rice/400/300" },
+                { 
+                        id: 2, title: "Fresh Grade A Tomatoes", category: "agriculture", unitType: "crate", factory: "Sunshine Farms", priceNorth: 4.00, priceDeveloping: 1.20, priceEmerging: 1.00, img: "https://picsum.photos/seed/tomato/400/300" },
+                { 
+                        id: 3, title: "Raw Forest Honey", category: "agriculture", unitType: "L", factory: "Bee Keepers United", priceNorth: 12.00, priceDeveloping: 8.00, priceEmerging: 6.00, img: "https://picsum.photos/seed/honey/400/300" },
+                { 
+                        id: 4, title: "Eco-Villa Project - Phase 1", category: "housing", unitType: "sqm", factory: "GreenBuild Developers", priceNorth: 4000, priceDeveloping: 800, priceEmerging: 600, img: "https://picsum.photos/seed/building/400/300" },
+                { 
+                        id: 5, title: "Ergonomic Office Chair", category: "factory", unitType: "unit", factory: "FurniturePro", priceNorth: 85.00, priceDeveloping: 40.00, priceEmerging: 35.00, img: "https://picsum.photos/seed/chair/400/300" }
+            ];
+
+            const klinikContent = {
+                tips: [
+                    { icon: "🥕", title: "Grounding Energy", text: "Root vegetables (Carrots, Beets) connect Spirit to Earth energy. Consuming raw maximizes enzyme intake." },
+                    { icon: "🍋", title: "Solar Plexus Fire", text: "Citrus fruits activate digestive fire. Aid in processing emotions and boosting metabolic rate." },
+                    { icon: "🥬", title: "Heart Openers", text: "Green leafy vegetables carry frequency of heart chakra. Promote compassion." }
+                ],
+                recipes: [
+                    { title: "Golden Turmeric Broth", type: "Immunity", time: "45 min", img: "https://picsum.photos/seed/soup/400/300", desc: "Anti-inflammatory blend of turmeric, ginger, and organic veggies." }
+            ]
+        };
+
+        let userState = {
+            role: 'consumer', // Current active role
+            holdings: {}, 
+            promoterBalance: 0.00,
+            ownerIncome: 0.00,
+            isSteward: false,
+            isPromoter: false,
+            isOwner: false
+        };
+        const ledger = [];
+
+        // --- CORE LOGIC ---
+        function calculateUniversalPrice(n, d, e) {
+            return (n + d + e) / 3;
+        }
+        function calculateUniversalPriceWithLogistics(productionPrice) {
+            return productionPrice + (productionPrice * UNIVERSAL_LOGISTICS_RATE);
+        }
+        function convertPriceToTTVc(usdPrice) {
+            return usdPrice / TTVc_BASE_VALUE;
+        }
+
+        // --- PAGE LOGIC ---
+        window.onload = () => {
+            loadState();
+            renderMarketplace();
+            renderKlinik();
+            renderDashboard();
+        };
+
+        // --- NAVIGATION & ROUTING LOGIC ---
+        function switchView(view) {
+            // Hide all main sections
+            const sections = ['view-marketplace', 'view-sourcedirect', 'view-klinik', 'view-dashboard', 'view-join', 'view-constitution'];
+            sections.forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            // Handle Button Active State
+            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show Target
+            if(view === 'marketplace') document.getElementById('view-marketplace').classList.remove('hidden');
+            if(view === 'sourcedirect') document.getElementById('view-sourcedirect').classList.remove('hidden');
+            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
+            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+            if(view === 'join') document.getElementById('view-join').classList.remove('hidden');
+            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
+        }
+
+        function setRole(role) {
+            userState.role = role;
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Switch View Logic
+            if(role === 'consumer') {
+                switchView('marketplace'); // Consumers start at Marketplace
+                showToast(`Active Role: ${role}`, 'info');
+            } else if(role === 'owner') {
+                switchView('dashboard'); // Owners go straight to Dashboard
+            } else if(role === 'steward') {
+                switchView('join'); // Stewards go to Join Us
+            } else {
+                switchView('dashboard'); // Default fall-back to Dashboard
+            }
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderMarketplace() {
+            const grid = document.getElementById('market-grid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
+                const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
+                const ttvcValue = convertPriceToTTVc(uniTotal);
+                
+                const catClass = p.category === 'agriculture' ? 'cat-agri' : (p.category === 'housing' ? 'cat-housing' : 'cat-factory');
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${p.img}" class="card-img">
+                    <div class="cat-tag ${catClass}">${p.category}</div>
+                    <div class="snfs-tag">LOGISTICS INCLUDED</div>
+                    <div class="card-body">
+                        <span class="tag" style="background:#333;">${p.factory}</span>
+                        <h3 style="margin: 0.5rem 0;">${p.title}</h3>
+                        
+                        <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem;">
+                            Universal Base: $${uniProduction.toFixed(2)} | + Logistics (10%): $${(uniProduction * UNIVERSAL_LOGISTICS_RATE).toFixed(2)}
+                        </div>
+
+                        <div style="color: var(--accent); font-weight: bold; margin-bottom: 1rem;">
+                            ${ttvcValue.toFixed(2)} TTVc ⭐ / <span style="color:white;">${p.unitType}</span>
+                        </div>
+                        
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            ⚡ Fixed Value: Once TTVc is minted, price is locked against 0.1g Gold.
+                        </div>
+                        
+                        <div class="btn-grid">
+                            <button class="btn btn-primary" onclick="openConvertModal(${p.id})">Convert (0% Fee)</button>
+                            <button class="btn btn-welfare" onclick="openSNFSModal(${p.id})">SNFS Access</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderKlinik() {
+            const tipsContainer = document.getElementById('klinik-tips');
+            tipsContainer.innerHTML = '';
+            klinikContent.tips.forEach(tip => {
+                tipsContainer.innerHTML += `<div class="tip-card"><div class="tip-icon">${tip.icon}</div><h3 style="margin-bottom: 0.5rem; color: var(--agri);">${tip.title}</h3><p style="font-size: 0.9rem; color:var(--text-muted);">${tip.text}</p></div>`;
+            });
+            const recipeContainer = document.getElementById('klinik-recipes');
+            recipeContainer.innerHTML = '';
+            klinikContent.recipes.forEach(rec => {
+                recipeContainer.innerHTML += `
+                    <div class="recipe-card">
+                        <img src="${rec.img}" class="recipe-img">
+                        <div class="recipe-meta">${rec.type} • ${rec.time}</div>
+                        <h3 style="margin-bottom: 0.5rem;">${rec.title}</h3>
+                        <p style="font-size: 0.9rem; color:var(--text-muted); margin-bottom: 1rem;">${rec.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function renderDashboard() {
+            // Update Vault Badge (Home Page)
+            const holdingsCount = Object.values(userState.holdings).reduce((a, b) => a + b, 0);
+            document.getElementById('dash-holdings').innerText = holdingsCount;
+
+            // Update Service Income
+            const promoterBadge = document.getElementById('dash-promoter');
+            const ownerBadge = document.getElementById('dash-owner');
+            const incomeBadge = document.getElementById('dash-income');
+
+            if(promoterBadge) {
+                promoterBadge.innerText = `$${userState.promoterBalance.toFixed(2)}`;
+                promoterBadge.style.display = 'block';
+            } else {
+                promoterBadge.style.display = 'none'; /* Only Promoters see Gratitude Awards */
+            }
+            if(ownerBadge) {
+                ownerBadge.innerText = `$${userState.ownerIncome.toFixed(2)}`;
+                ownerBadge.style.display = 'block'; /* Only Owners see Passive Income */
+            } else {
+                ownerBadge.style.display = 'none';
+            }
+        }
+
+        // --- ACTIONS ---
+        function openConvertModal(pid) {
+            if(pid) document.getElementById('convert-product').value = pid;
+            document.getElementById('modal-convert').classList.add('open');
+        }
+
+        function processConversion() {
+            const pid = document.getElementById('convert-product').value;
+            const p = products.find(x => x.id == pid);
+            const ttvcVal = convertPriceToTTVc(calculateUniversalPriceWithLogistics(calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging)));
+            
+            userState.holdings[pid] = (userState.holdings[pid] || 0) + 1;
+            updateVaultCount();
+            
+            const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
+            const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
+
+            addLedgerEntry('CONVERT', `User purchased ${p.title}. Value: ${ttvcVal.toFixed(2)} TTVc ⭐. 0% Commission.`);
+            closeModal('modal-convert');
+            showToast("Conversion Complete. 100% Value Retained.", 'success');
+            updateDashboard(); // Syncs state back to local storage
+        }
+
+        function openSNFSModal(pid) {
+            const p = products.find(x => x.id == pid);
+            document.getElementById('snfs-item-name').innerText = p.title;
+            document.getElementById('modal-snfs').classList.add('open');
+        }
+
+        function processSNFS() {
+            const amount = parseFloat(document.getElementById('snfs-amount').value;
+            if(!amount) return;
+            
+            // Standard Split for Goods Access (20% total: 10% to Promoter, 10% to Owner)
+            const promoterShare = amount * 0.10;
+            const ownerShare = amount * 0.10;
+
+            const currentPromoter = parseFloat(localStorage.getItem('userPromoterBalance') || "0.00");
+            const currentOwner = parseFloat(localStorage.getItem('userOwnerIncome') || "0.00");
+
+            userState.promoterBalance += promoterShare; 
+            userState.ownerIncome += ownerIncome;     
+
+            addLedgerEntry('SNFS', `Donation: $${amount}. Gratitude Allocated: Promoter $${promoterShare.toFixed(2)}, Owner $${ownerShare.toFixed(2)}`);
+            closeModal('modal-snfs');
+            showToast("Contribution Accepted. Goods Dispatched.", 'success');
+            updateDashboard();
+        }
+
+        function updateVaultCount() {
+            let count = 0;
+            Object.values(userState.holdings).forEach(q => count += q);
+            document.getElementById('vault-badge').innerText = count.toFixed(0);
+        }
+        function addLedgerEntry(type, desc) {
+            const hash = '0x' + Math.random().toString(16).substr(2, 16);
+            ledger.push({ hash, type, desc });
+        }
+
+        function populateSelects() { 
+            const sel = document.getElementById('convert-product');
+            if(sel) {
+                sel.innerHTML = '';
+                products.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    // Using Universal Price (Logistics Included) for option text
+                    const uniProduction = calculateUniversalPrice(p.priceNorth, p.priceDeveloping, p.priceEmerging);
+                    const uniTotal = calculateUniversalPriceWithLogistics(uniProduction);
+                    opt.text = `${p.title} ($${uniTotal.toFixed(2)})`;
+                    sel.appendChild(opt);
+                });
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        function showToast(msg, type) { 
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderLeftColor = type === 'success' ? 'var(--agri)' : 'var(--welfare)';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        function switchView(view) {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show Target
+            if(view === 'marketplace') document.getElementById('view-marketplace').classList.remove('hidden');
+            if(view === 'sourcedirect') document.getElementById('view-sourcedirect').classList.remove('hidden');
+            if(view === 'klinik') document.getElementById('view-klinik').classList.remove('hidden');
+            if(view === 'dashboard') document.getElementById('view-dashboard').classList.remove('hidden');
+            if(view === 'join') document.getElementById('view-join').classList.remove('hidden');
+            if(view === 'constitution') document.getElementById('view-constitution').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
